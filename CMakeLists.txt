@@ -9,7 +9,7 @@ set (OpenMEEG_libs_VERSION_MAJOR 1)
 set (OpenMEEG_libs_VERSION_MINOR 0)
 
 
-set(OpenMEEG_HEADER_INSTALLDIR toto) # XXX I don't know why this should be here
+set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be here
 
 # Modify where to find the modules
 set(CMAKE_MODULE_PATH
@@ -23,10 +23,6 @@ set(CMAKE_MODULE_PATH
 # OpenMEEG stuff
 #####
 include(GenerateExportHeader)
-# include(BlasLapackOption)
-include(CompileOptions)
-include(CheckCXXFeatures)
-CHECK_CXX_STANDARD_LIBRARY()
 
 set(OpenMEEG_INCLUDE_DIRECTORIES
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -63,12 +59,12 @@ endif()
 find_package(MKL REQUIRED)
 
 if (MKL_FOUND)
-    include_directories(${MKL_INCLUDE_DIR})
+    set(BLA_INCLUDE_DIR ${MKL_INCLUDE_DIR})
     set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
-    # set(BLA_DEFINITIONS USE_MKL)
-    set(USE_MKL True)
-    set(HAVE_BLAS True)
-    set(HAVE_LAPACK True)
+    set(BLA_DEFINITIONS USE_MKL HAVE_BLAS HAVE_LAPACK)
+    # set(USE_MKL True)
+    # set(HAVE_BLAS True)
+    # set(HAVE_LAPACK True)
 endif()
 
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
