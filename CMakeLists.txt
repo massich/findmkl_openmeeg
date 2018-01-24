@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
-project (OpenMEEG_libs)
+project (OpenMEEG_lib)
+
+set(BUILD_TESTING True)
+enable_testing()
 
 #version number
 set (OpenMEEG_libs_VERSION_MAJOR 1)
@@ -24,17 +27,15 @@ include(GenerateExportHeader)
 include(CompileOptions)
 include(CheckCXXFeatures)
 CHECK_CXX_STANDARD_LIBRARY()
-configure_file(${OpenMEEG_SOURCE_DIR}/OpenMEEGConfigure.h.in
-               ${OpenMEEG_BINARY_DIR}/OpenMEEGConfigure.h)
 
 set(OpenMEEG_INCLUDE_DIRECTORIES
-    ${OpenMEEG_BINARY_DIR}
-    ${OpenMEEG_SOURCE_DIR}
-    # ${OpenMEEG_SOURCE_DIR}/src
-    ${OpenMEEG_SOURCE_DIR}/OpenMEEGMaths/include
-    ${OpenMEEG_SOURCE_DIR}/OpenMEEG/include
-    ${OpenMEEG_BINARY_DIR}/OpenMEEG/src
-    ${OpenMEEG_BINARY_DIR}/OpenMEEGMaths/src
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEG/include
+    ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEG/src
+    ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGMaths/src
     # ${OpenMEEG_OTHER_INCLUDE_DIRS}
     # ${matio_INCLUDE_DIRS}
 )
@@ -63,11 +64,17 @@ find_package(MKL REQUIRED)
 
 if (MKL_FOUND)
     include_directories(${MKL_INCLUDE_DIR})
-    set(BLAS_LIBRARIES ${MKL_LIBRARIES})
-    set(BLA_DEFINITIONS USE_MKL)
+    set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
+    # set(BLA_DEFINITIONS USE_MKL)
+    set(USE_MKL True)
+    set(HAVE_BLAS True)
+    set(HAVE_LAPACK True)
 endif()
 
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
+               ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
 include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
 add_subdirectory(OpenMEEGMaths)
