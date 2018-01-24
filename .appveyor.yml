@@ -77,19 +77,9 @@ before_build:
 
 build_script:
   - cmake --build .
-  - ctest .
 
 test_script:
-  - ps: |
-      if ($env:BUILD_STATIC -eq 'OFF') {
-        ECHO 'BUILD_STATIC is OFF. Compying shipping libraries'
-        cd 'C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\redist\intel64_win\mkl\'
-        cp *.dll $env:APPVEYOR_BUILD_FOLDER\build\
-      }else{
-        ECHO 'BUILD_STATIC is ON. No need to copy runtime dll'
-      }
-  - cd %APPVEYOR_BUILD_FOLDER%\build\
-  - .\Debug\CMakeHelloWorld.exe
+  - ctest .
 
 deploy: off
 
