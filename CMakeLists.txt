@@ -59,6 +59,7 @@ endif()
 find_package(MKL REQUIRED)
 
 if (MKL_FOUND)
+    include_directories(${MKL_INCLUDE_DIR})
     set(BLA_INCLUDE_DIR ${MKL_INCLUDE_DIR})
     set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
     set(BLA_DEFINITIONS USE_MKL HAVE_BLAS HAVE_LAPACK)
