@@ -98,15 +98,7 @@ script:
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
   - make VERBOSE=1
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      ldd ./CMakeHelloWorld
-    else  # Mac
-      otool -L ./CMakeHelloWorld
-    fi
-
-after_success:
-  - ./CMakeHelloWorld
+  - ctest -V
 
 notifications:
   email: false

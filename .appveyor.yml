@@ -61,10 +61,12 @@ install:
       C:\w_mkl_2018.0.124.exe -s -l c:\logs\extract-mkl.log -a install --eula=accept --components=all --output='C:\logs\install-mkl-output.txt' --installdir='C:\Program Files (x86)\IntelSWTools' --log='c:\logs\install-mkl.log' | Out-Null
       $env:LD_MKL_PATH='C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\lib\intel64_win\'
       $env:LIB="$env:LD_MKL_PATH;$env:LIB"
-      $env:MKLROOT='C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl'
+  # $env:MKLROOT='C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl'
 
 before_build:
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\bin\compilervars_arch.bat" intel64 vs2015
+  - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
+  - "ECHO %MKLROOT%"
   - cd %APPVEYOR_BUILD_FOLDER%
   - "ECHO %BLAS_VERSION%"
   - "ECHO 'cmake -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G \"Visual Studio 14 2015 Win64\" .. '"
@@ -79,16 +81,10 @@ build_script:
   - cmake --build .
 
 test_script:
-  - ps: |
-      if ($env:BUILD_STATIC -eq 'OFF') {
-        ECHO 'BUILD_STATIC is OFF. Compying shipping libraries'
-        cd 'C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\redist\intel64_win\mkl\'
-        cp *.dll $env:APPVEYOR_BUILD_FOLDER\build\
-      }else{
-        ECHO 'BUILD_STATIC is ON. No need to copy runtime dll'
-      }
-  - cd %APPVEYOR_BUILD_FOLDER%\build\
-  - .\Debug\CMakeHelloWorld.exe
+  - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
+  - ctest --verbose .
 
 deploy: off
 
