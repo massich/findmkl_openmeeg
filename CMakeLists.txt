@@ -70,6 +70,22 @@ endif()
 
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
 
+if (USE_GCC AND BUILD_TESTING)
+    option(ENABLE_COVERAGE "Enable coverage" OFF)
+    mark_as_advanced(ENABLE_COVERAGE)
+endif()
+
+if (ENABLE_COVERAGE)
+    if (USE_GCC)
+        set(COVERAGE_FLAGS "-fprofile-arcs -ftest-coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_FLAGS} -lgcov")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_FLAGS}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
+    else()
+        message(SEND_ERROR "Coverage is only available with gcc.")
+    endif()
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
