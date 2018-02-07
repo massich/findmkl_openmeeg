@@ -81,6 +81,9 @@ build_script:
   - cmake --build .
 
 test_script:
+  - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
   - ctest --verbose .
 
 deploy: off
