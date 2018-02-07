@@ -18,15 +18,6 @@ cache:
 
 environment:
   matrix:
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : ON
-
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : OFF
-
-    - BLAS_VERSION: Intel10_64lp_seq
-      BUILD_STATIC : ON
-
     - BLAS_VERSION: Intel10_64lp_seq
       BUILD_STATIC : OFF
 
