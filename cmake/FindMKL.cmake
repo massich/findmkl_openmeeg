@@ -79,14 +79,10 @@
 
 set(CMAKE_FIND_DEBUG_MODE 1)
 
-# unset this variable defined in matio
-unset(MSVC)
-
 # Find MKL ROOT
 find_path(MKL_ROOT_DIR NAMES include/mkl_cblas.h PATHS $ENV{MKLROOT})
 
 # Convert symlinks to real paths
-
 get_filename_component(MKL_ROOT_DIR ${MKL_ROOT_DIR} REALPATH)
 
 if (NOT MKL_ROOT_DIR)
