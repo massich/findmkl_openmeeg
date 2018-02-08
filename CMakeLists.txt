@@ -70,6 +70,23 @@ endif()
 
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
 
+option(ENABLE_COVERAGE "Enable coverage" OFF)
+
+if (ENABLE_COVERAGE)
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        set(COVERAGE_FLAGS "-fprofile-arcs -ftest-coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_FLAGS} -lgcov")
+    elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+        set(COVERAGE_FLAGS "-coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_FLAGS}")
+    else()
+        message(SEND_ERROR "Coverage is only available with gcc or clang.")
+    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
