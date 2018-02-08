@@ -52,10 +52,6 @@ matrix:
 
 
 before_install:
-  # Dependencies required by the CI are installed in ${TRAVIS_BUILD_DIR}/deps/
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p "${DEPS_DIR}"
-
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       # FindMKL.cmake uses mkl_link_tool, which is a 32bits application !
@@ -67,8 +63,6 @@ before_install:
 
   # Travis machines have 2 cores
   - JOBS=2
-
-  - cd "${DEPS_DIR}"
 
   ############################################################################
   # Handle caching of downloaded files
