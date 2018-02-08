@@ -55,11 +55,16 @@ int main (int argc, char** argv) {
 
     std::cout << "Mesh : " << argv[1] << std::endl;
 
-    Matrix matrix;
-    matrix.load(argv[1]);
-    matrix.info();
+    try {
+        Matrix matrix;
+        matrix.load(argv[1]);
+        matrix.info();
 
-    matrix.load(argv[2]);
-    matrix.info();
+        matrix.load(argv[2]);
+        matrix.info();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        exit(1);
+    }
 
 }
