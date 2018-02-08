@@ -59,6 +59,7 @@ before_install:
       sudo apt-get update
       sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
       sudo apt-get install -y lcov
+      sudo apt-get install -y libmatio2 libmatio-dev
     fi
 
   # Travis machines have 2 cores
