@@ -43,6 +43,12 @@ set(OpenMEEGMaths_SOURCES
     MathsIO.C AsciiIO.C BrainVisaTextureIO.C TrivialBinIO.C)
     # MathsIO.C MatlabIO.C AsciiIO.C BrainVisaTextureIO.C TrivialBinIO.C)
 
+# include the file with the function then call the macro
+if( CPPCHECK_FOUND )
+    include(${CMAKE_SOURCE_DIR}/cmake/analysis.cmake)
+    add_analysis(${PROJECT_NAME} OpenMEEGMaths_SOURCES)
+endif()
+
 # set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 add_library(OpenMEEGMaths SHARED ${OpenMEEGMaths_SOURCES})

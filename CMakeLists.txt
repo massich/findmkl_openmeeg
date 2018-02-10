@@ -87,8 +87,26 @@ if (ENABLE_COVERAGE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
 endif()
 
+option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
+
+if (ENABLE_CPPCHECK)
+    # find the cppcheck binary
+    find_package(CppCheck)
+    # static analysis. Should be before adding subprojects
+    set(ALL_ANALYSIS_TARGETS)
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
 include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
 add_subdirectory(OpenMEEGMaths)
+
+
+# Add the "make analysis" target
+if( CPPCHECK_FOUND )
+    add_custom_target(analysis)
+    message("analysis are ${ALL_ANALYSIS_TARGETS}")
+    add_dependencies(analysis ${ALL_ANALYSIS_TARGETS})
+    set_target_properties(analysis PROPERTIES EXCLUDE_FROM_ALL TRUE)
+endif()
