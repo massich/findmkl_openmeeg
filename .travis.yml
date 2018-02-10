@@ -38,6 +38,7 @@ matrix:
       env:
         - BACKEND=Intel10_64lp_seq
         - BUILD_STATIC=OFF
+        - CPPCHECK=ON
     - os: osx
       env:
         - BACKEND=Intel10_64lp_seq
@@ -105,8 +106,8 @@ script:
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
   - make
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then make analysis; fi
-  - ctest -V
+  - if [[ "${CPPCHECK}" == "ON" ]]; then make analysis; fi
+  # - ctest -V
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
