@@ -107,7 +107,7 @@ script:
   - cmake .. ${CMAKE_OPTIONS}
   - make
   - if [[ "${CPPCHECK}" == "ON" ]]; then make analysis; fi
-  # - ctest -V
+  - ctest -V
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info

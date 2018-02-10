@@ -53,8 +53,6 @@ namespace OpenMEEG {
 
     const Matrix& Matrix::set(const double d) {
         for(size_t i=0;i<size();i++) data()[i]=d;
-        int* x = NULL;
-        std::cout << *x << std::endl;
         return *this;
     }
 
