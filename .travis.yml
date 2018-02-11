@@ -17,6 +17,7 @@ matrix:
       env:
         - BACKEND=Intel10_64lp_seq
         - BUILD_STATIC=OFF
+        - ANALYSE=ON
     - os: linux
       env:
         - BACKEND=Intel10_64lp_seq
@@ -81,6 +82,27 @@ before_install:
   ############################################################################
   - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
 
+  ############################################################################
+  # Install scan-build clang analyser
+  ############################################################################
+  - |
+    export SCAN_BUILD=""
+    if [[ "${ANALYSE}" == "ON" ]]; then
+      export SCAN_BUILD="scan-build --status-bugs -o scanbuildout"
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        sudo apt-get install -qq clang;
+      else
+        curl http://clang-analyzer.llvm.org/downloads/checker-276.tar.bz2 -o /usr/local/Cellar/checker-276.bz2;
+        cd /usr/local/Cellar/;
+        tar -jxvf checker-276.bz2;
+        ln -s /usr/local/Cellar/checker-276/scan-build /usr/local/bin/scan-build;
+        rm checker-276.bz2;
+      fi
+      shopt -s expand_aliases
+      alias cmake="${SCAN_BUILD} cmake -DCMAKE_BUILD_TYPE=Debug"
+      alias make="${SCAN_BUILD} make"
+    fi
+
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
@@ -93,7 +115,7 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
-  - make VERBOSE=1
+  - make
   - ctest -V
 
 after_success:
