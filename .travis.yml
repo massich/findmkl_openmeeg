@@ -98,6 +98,7 @@ before_install:
         ln -s /usr/local/Cellar/checker-276/scan-build /usr/local/bin/scan-build;
         rm checker-276.bz2;
       fi
+      shopt -s expand_aliases
       alias cmake="${SCAN_BUILD} cmake -DCMAKE_BUILD_TYPE=Debug"
       alias make="${SCAN_BUILD} make"
     fi
