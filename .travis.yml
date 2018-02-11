@@ -98,12 +98,14 @@ before_install:
         ln -s /usr/local/Cellar/checker-276/scan-build /usr/local/bin/scan-build;
         rm checker-276.bz2;
       fi
+      alias cmake="${SCAN_BUILD} cmake -DCMAKE_BUILD_TYPE=Debug"
+      alias make="${SCAN_BUILD} make"
     fi
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
-  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11 -DBLA_VENDOR=$BACKEND -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug"
+  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11 -DBLA_VENDOR=$BACKEND -DENABLE_COVERAGE=ON"
   - |
     if [[ "${BUILD_STATIC}" == "ON" ]]; then
       export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DBLA_STATIC=ON"
@@ -111,8 +113,8 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then echo $LD_LIBRARY_PATH; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
-  - ${SCAN_BUILD} cmake .. ${CMAKE_OPTIONS}
-  - ${SCAN_BUILD} make
+  - cmake .. ${CMAKE_OPTIONS}
+  - make
   - ctest -V
 
 after_success:
