@@ -19,8 +19,8 @@ if (NOT matio_LIBRARIES)
 
     set(matio_LIB_SEARCH_PATHS
         $ENV{matio_dir}
-        $ENV{matio_dir}/lib
-        $ENV{matio_dir}/bin
+        $ENV{matio_dir}lib
+        $ENV{matio_dir}bin
         )
 
     find_library(matio_LIBRARY NAMES matio PATHS ${matio_LIB_SEARCH_PATHS})
