@@ -17,7 +17,13 @@ if (NOT matio_LIBRARIES)
 
     # Look for the library.
 
-    find_library(matio_LIBRARY NAMES matio)
+    set(matio_LIB_SEARCH_PATHS
+        $ENV{matio_dir}
+        $ENV{matio_dir}/lib
+        $ENV{matio_dir}/bin
+        )
+
+    find_library(matio_LIBRARY NAMES matio PATHS ${matio_LIB_SEARCH_PATHS})
     mark_as_advanced(matio_LIBRARY)
 
     # handle the QUIETLY and REQUIRED arguments and set matio_FOUND to TRUE if
