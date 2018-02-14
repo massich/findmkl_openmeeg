@@ -48,6 +48,7 @@ add_library(OpenMEEGMaths SHARED ${OpenMEEGMaths_SOURCES})
 target_link_libraries(OpenMEEGMaths ${LAPACK_LIBRARIES})
 target_link_libraries(OpenMEEGMaths ${matio_LIBRARIES})
 target_include_directories(OpenMEEGMaths PRIVATE ${BLA_INCLUDE_DIR})
+target_include_directories(OpenMEEGMaths PRIVATE ${matio_INCLUDE_DIRS})
 target_compile_definitions(OpenMEEGMaths PUBLIC ${BLA_DEFINITIONS})
 
 generate_export_header(OpenMEEGMaths
