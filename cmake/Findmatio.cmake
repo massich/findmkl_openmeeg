@@ -33,7 +33,7 @@ if (NOT matio_LIBRARIES)
     find_library(matio_LIBRARY 
 	    HINTS 
 	    	${matio_LIB_SEARCH_PATHS}
-	    NAMES libmatio 
+	    NAMES matio 
 	    )
     message(STATUS "matio_library ${matio_LIBRARY}")
 
