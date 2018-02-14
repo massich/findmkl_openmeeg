@@ -25,6 +25,9 @@ if (NOT matio_LIBRARIES)
     # Look for the library.
 
     set(matio_LIB_SEARCH_PATHS
+        C:/conda/Library/
+        C:/conda/Library/lib
+        C:/conda/Library/bin
         $ENV{matio_dir}
         $ENV{matio_dir}lib
         $ENV{matio_dir}bin
