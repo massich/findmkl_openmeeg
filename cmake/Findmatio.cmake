@@ -14,8 +14,7 @@ if (NOT matio_LIBRARIES)
 
     find_path(matio_INCLUDE_DIR
 	    HINTS
-	    	external/include	
-		C:/Users/User/findmkl_openmeeg/external/include
+        	$ENV{matio_dir}include
 	    NAMES 
 	    	matio.h
 	    )
