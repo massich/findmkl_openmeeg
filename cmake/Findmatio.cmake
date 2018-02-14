@@ -30,10 +30,15 @@ if (NOT matio_LIBRARIES)
         $ENV{matio_dir}bin
         )
 
+    set(matio_libname matio)
+    if (WIN32)
+        set(matio_libname libmatio)
+    endif ()
+
     find_library(matio_LIBRARY 
 	    HINTS 
 	    	${matio_LIB_SEARCH_PATHS}
-	    NAMES matio 
+	    NAMES ${matio_libname}
 	    )
     message(STATUS "matio_library ${matio_LIBRARY}")
 
