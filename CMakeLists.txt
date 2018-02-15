@@ -5,9 +5,9 @@ set(BUILD_TESTING True)
 enable_testing()
 
 #version number
-set (OpenMEEG_libs_VERSION_MAJOR 1)
-set (OpenMEEG_libs_VERSION_MINOR 0)
-
+set(VERSION_MAJOR 2)
+set(VERSION_MINOR 4)
+set(VERSION_PATCH 0)
 
 set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be here
 
@@ -24,17 +24,21 @@ set(CMAKE_MODULE_PATH
 #####
 include(GenerateExportHeader)
 
-set(OpenMEEG_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEG/include
-    ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEG/src
-    ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGMaths/src
-    # ${OpenMEEG_OTHER_INCLUDE_DIRS}
-    # ${matio_INCLUDE_DIRS}
-)
+# Packaging stuff
+include(Packaging)
+include(GNUInstallDirs)
+
+# set(OpenMEEG_INCLUDE_DIRECTORIES
+#     ${CMAKE_CURRENT_BINARY_DIR}
+#     ${CMAKE_CURRENT_SOURCE_DIR}
+#     # ${CMAKE_CURRENT_SOURCE_DIR}/src
+#     ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include
+#     ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEG/include
+#     ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEG/src
+#     ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGMaths/src
+#     # ${OpenMEEG_OTHER_INCLUDE_DIRS}
+#     # ${matio_INCLUDE_DIRS}
+# )
 
 #########
 # FindMKL stuff
@@ -94,5 +98,12 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
-include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
+# include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
 add_subdirectory(OpenMEEGMaths)
+
+# Use a proper config file
+# install(EXPORT OpenMEEGConfig
+#     FILE OpenMEEGConfig.cmake
+#     NAMESPACE OpenMEEGC::
+#     DESTINATION lib/cmake/OpenMEEGConfig
+# )
