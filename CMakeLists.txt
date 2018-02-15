@@ -68,6 +68,8 @@ if (MKL_FOUND)
     # set(HAVE_LAPACK True)
 endif()
 
+find_package(matio REQUIRED)
+
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
 
 option(ENABLE_COVERAGE "Enable coverage" OFF)
