@@ -21,7 +21,7 @@ environment:
       PYTHON: "C:\\conda"
   matrix:
     - BLAS_VERSION: Intel10_64lp_seq
-      BUILD_STATIC : OFF
+      BUILD_STATIC : ON
       PYTHON_VERSION: "3.6"
       PYTHON_ARCH: "64"
 
@@ -91,8 +91,8 @@ build_script:
 
 test_script:
   - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  # - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
-  # - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
   - ctest --verbose .
 
 deploy: off
