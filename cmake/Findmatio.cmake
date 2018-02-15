@@ -54,16 +54,16 @@ if (NOT matio_LIBRARIES)
     include(FindPackageHandleStandardArgs)
     find_package_handle_standard_args(matio DEFAULT_MSG matio_LIBRARY matio_INCLUDE_DIR)
 
-    if (matio_FOUND AND NOT TARGET matio)
-        add_library(matio SHARED IMPORTED GLOBAL)
-        set_property(TARGET matio PROPERTY
+    if (matio_FOUND AND NOT TARGET MATIO::MATIO)
+        add_library(MATIO::MATIO UNKNOWN IMPORTED)
+        set_property(TARGET MATIO::MATIO PROPERTY
             IMPORTED_LOCATION ${matio_LIBRARY}
         )
-        set_property(TARGET matio PROPERTY
+        set_property(TARGET MATIO::MATIO PROPERTY
             IMPORTED_LINK_LIBRARIES HDF5::HDF5
         )
-        set_property(TARGET matio PROPERTY
-            INCLUDE_DIRECTORIES ${matio_INCLUDE_DIR}
+        set_property(TARGET MATIO::MATIO PROPERTY
+            INTERFACE_INCLUDE_DIRECTORIES ${matio_INCLUDE_DIR}
         )
     endif()
 
