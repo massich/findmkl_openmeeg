@@ -69,6 +69,7 @@ if (MKL_FOUND)
 endif()
 
 # include_directories(external/include/)
+find_package(Threads)
 find_package(matio REQUIRED)
 
 # message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
