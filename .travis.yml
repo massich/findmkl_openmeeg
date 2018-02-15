@@ -17,18 +17,6 @@ matrix:
       env:
         - BACKEND=Intel10_64lp_seq
         - BUILD_STATIC=OFF
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=ON
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=ON
 
     #########
     # OSx Machines
@@ -37,18 +25,6 @@ matrix:
       env:
         - BACKEND=Intel10_64lp_seq
         - BUILD_STATIC=OFF
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=ON
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=ON
 
 
 before_install:
@@ -59,6 +35,7 @@ before_install:
       sudo apt-get update
       sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
       sudo apt-get install -y lcov
+      sudo apt-get install -y libmatio2 libmatio-dev
     fi
 
   # Travis machines have 2 cores
@@ -80,6 +57,15 @@ before_install:
   # Install MKL
   ############################################################################
   - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+
+  ############################################################################
+  # Install Matio
+  ############################################################################
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        rm -rf /usr/local/include/c++;
+        brew install hdf5 libmatio;
+    fi
+
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
