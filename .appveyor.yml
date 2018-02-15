@@ -29,9 +29,9 @@ skip_commits:
 # Add [av skip] to commit messages
   message: /\[av skip\]/
 
-# To allow remote connection to appveyor
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# # To allow remote connection to appveyor
+# init:
+#   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   ############################################################################
@@ -91,12 +91,12 @@ build_script:
 
 test_script:
   - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
-  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
+  # - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  # - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
   - cmd: ctest --verbose .
 
 deploy: off
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
