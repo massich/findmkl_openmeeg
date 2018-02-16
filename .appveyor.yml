@@ -17,18 +17,28 @@ cache:
   - C:\w_mkl_2018.0.124.exe
 
 environment:
+  global:
+      PYTHON: "C:\\conda"
   matrix:
     - BLAS_VERSION: Intel10_64lp
       BUILD_STATIC : ON
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
 
     - BLAS_VERSION: Intel10_64lp
       BUILD_STATIC : OFF
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
 
     - BLAS_VERSION: Intel10_64lp_seq
       BUILD_STATIC : ON
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
 
     - BLAS_VERSION: Intel10_64lp_seq
-      BUILD_STATIC : OFF
+      BUILD_STATIC : ON
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
 
 skip_commits:
 # Add [av skip] to commit messages
@@ -39,6 +49,19 @@ skip_commits:
 #   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
+  ############################################################################
+  # Install Win packages
+  ############################################################################
+  - choco install dependencywalker -y --allow-empty-checksums
+
+
+  ############################################################################
+  # Install Conda
+  ############################################################################
+  - "git clone --depth 1 git://github.com/astropy/ci-helpers.git"
+  - "powershell ci-helpers/appveyor/install-miniconda.ps1"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
   ############################################################################
   # Install CMake
   ############################################################################
@@ -61,7 +84,12 @@ install:
       C:\w_mkl_2018.0.124.exe -s -l c:\logs\extract-mkl.log -a install --eula=accept --components=all --output='C:\logs\install-mkl-output.txt' --installdir='C:\Program Files (x86)\IntelSWTools' --log='c:\logs\install-mkl.log' | Out-Null
       $env:LD_MKL_PATH='C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\lib\intel64_win\'
       $env:LIB="$env:LD_MKL_PATH;$env:LIB"
-  # $env:MKLROOT='C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl'
+
+  ############################################################################
+  # Install Conda
+  ############################################################################
+  - conda config --add channels conda-forge
+  - conda install libmatio
 
 before_build:
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\bin\compilervars_arch.bat" intel64 vs2015
@@ -75,6 +103,8 @@ before_build:
   - ps: |
       mkdir build
       cd build
+  - ps: $env:matio_dir='C:\conda\Library\'
+  - ps: $env:CMAKE_PREFIX_PATH='C:\conda\Library\cmake'
   - cmake -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
@@ -82,9 +112,13 @@ build_script:
 
 test_script:
   - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
-  - ldd %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\src\Debug\OpenMEEGMaths.dll
-  - ctest --verbose .
+  - cp %matio_dir%bin\libmatio.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - cp %matio_dir%bin\hdf5.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - cp %matio_dir%bin\zlib.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - depends.exe /f:1 /c /oc:c:\projects\depends.txt %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  - appveyor PushArtifact C:\projects\depends.txt
+  - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
+  - cmd: ctest -v .
 
 deploy: off
 

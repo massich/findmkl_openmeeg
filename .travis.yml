@@ -59,6 +59,7 @@ before_install:
       sudo apt-get update
       sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
       sudo apt-get install -y lcov
+      sudo apt-get install -y libmatio2 libmatio-dev
     fi
 
   # Travis machines have 2 cores
@@ -81,6 +82,15 @@ before_install:
   ############################################################################
   - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
 
+  ############################################################################
+  # Install Matio
+  ############################################################################
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        rm -rf /usr/local/include/c++;
+        brew install hdf5 libmatio;
+    fi
+
+
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
@@ -93,8 +103,8 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
-  - make VERBOSE=1
-  - ctest -V
+  - cmake --build .
+  - ctest -v .
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
