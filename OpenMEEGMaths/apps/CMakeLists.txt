@@ -1,4 +1,4 @@
-add_executable(om_assemble assemble.cpp geometry.cpp sensors.cpp)
+add_executable(om_assemble assemble.cpp geometry.cpp sensors.cpp danielsson.cpp domain.cpp interface.cpp)
 target_link_libraries(om_assemble OpenMEEG::OpenMEEGMaths)
 target_include_directories(om_assemble PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
