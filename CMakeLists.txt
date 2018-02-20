@@ -25,8 +25,16 @@ set(CMAKE_MODULE_PATH
 include(GenerateExportHeader)
 
 # Packaging stuff
-include(Packaging)
+# include(Packaging)
+message(DEBUG ${CMAKE_INSTALL_LIBDIR})
 include(GNUInstallDirs)
+message(DEBUG ${CMAKE_INSTALL_LIBDIR})
+# get_cmake_property(_variableNames VARIABLES)
+# message(STATUS "---- sik -----")
+# foreach (_variableName ${_variableNames})
+#     message(STATUS "${_variableName}=${${_variableName}}")
+# endforeach()
+# message(STATUS "---- sik -----")
 
 # set(OpenMEEG_INCLUDE_DIRECTORIES
 #     ${CMAKE_CURRENT_BINARY_DIR}
