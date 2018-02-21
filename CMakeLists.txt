@@ -103,6 +103,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
 
 # include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
 add_subdirectory(OpenMEEGMaths)
+add_subdirectory(OpenMEEG)
 
 # Use a proper config file
 # install(EXPORT OpenMEEGConfig
