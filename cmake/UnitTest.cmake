@@ -18,8 +18,9 @@ function(openmeeg_test TEST_NAME PROG)
 endfunction()
 
 function(OPENMEEG_UNIT_TEST TEST_NAME)
-    parse_arguments("SOURCES;LIBRARIES;PARAMETERS;DEPENDS" "" "DEFAULT" ${ARGN})
+    parse_arguments("SOURCES;INCLUDE_DIR;LIBRARIES;PARAMETERS;DEPENDS" "" "DEFAULT" ${ARGN})
     new_executable(${TEST_NAME} SOURCES ${SOURCES} LIBRARIES ${LIBRARIES})
+    target_include_directories(${TEST_NAME} PRIVATE ${INCLUDE_DIR})
 
     set(TEST_COMMAND "${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}")
     if (WIN32)
