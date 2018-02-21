@@ -1,13 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
-project (OpenMEEG_lib)
+project (OpenMEEG_lib VERSION 2.4.0)
 
 set(BUILD_TESTING True)
 enable_testing()
-
-#version number
-set(VERSION_MAJOR 2)
-set(VERSION_MINOR 4)
-set(VERSION_PATCH 0)
 
 set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be here
 
