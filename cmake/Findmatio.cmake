@@ -10,6 +10,13 @@ if (NOT matio_LIBRARIES)
 
     find_package(HDF5 REQUIRED)
 
+    # Make a modern cmake interface to HDF5
+    add_library(HDF5::HDF5 UNKNOWN IMPORTED)
+    set_target_properties(HDF5::HDF5 PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HDF5_INCLUDE_DIRS}")
+    set_property(TARGET HDF5::HDF5 APPEND PROPERTY
+        IMPORTED_LOCATION "${HDF5_LIBRARIES}")
+
     # Look for the header file.
 
     find_path(matio_INCLUDE_DIR
@@ -44,18 +51,33 @@ if (NOT matio_LIBRARIES)
 
     # handle the QUIETLY and REQUIRED arguments and set matio_FOUND to TRUE if
     # all listed variables are TRUE
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(matio DEFAULT_MSG matio_LIBRARY matio_INCLUDE_DIR)
 
-    # include(FindPackageHandleStandardArgs)
-    # find_package_handle_standard_args(matio DEFAULT_MSG matio_LIBRARY matio_INCLUDE_DIR)
+    if (matio_FOUND AND NOT TARGET MATIO::MATIO)
+        add_library(MATIO::MATIO UNKNOWN IMPORTED)
+        set_property(TARGET MATIO::MATIO PROPERTY
+            IMPORTED_LOCATION ${matio_LIBRARY}
+        )
+        set_property(TARGET MATIO::MATIO PROPERTY
+            IMPORTED_LINK_LIBRARIES HDF5::HDF5
+        )
+        set_property(TARGET MATIO::MATIO PROPERTY
+            INTERFACE_INCLUDE_DIRECTORIES ${matio_INCLUDE_DIR}
+        )
+    endif()
 
-    #if (MATIO_FOUND)
-        set(matio_FOUND TRUE)
-        set(matio_LIBRARIES ${matio_LIBRARY} ${HDF5_LIBRARIES})
-        set(matio_INCLUDE_DIRS ${matio_INCLUDE_DIR} ${HDF5_INCLUDE_DIR})
-	#else()
-    	#    set(matio_LIBRARIES)
-    	#    set(matio_INCLUDE_DIRS)
-    	#endif()
+    # install(TARGETS MATIO::MATIO # EXPORT OpenMEEGConfig
+    #     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    #     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    #     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
 
+    #     set(matio_FOUND TRUE)
+    #     set(matio_LIBRARIES ${matio_LIBRARY} ${HDF5_LIBRARIES})
+    #     set(matio_INCLUDE_DIRS ${matio_INCLUDE_DIR} ${HDF5_INCLUDE_DIR})
+    # else()
+    #     set(matio_FOUND FALSE)
+    #     set(matio_LIBRARIES)
+    #     set(matio_INCLUDE_DIRS)
     # include(matioVersion)
 endif()
