@@ -7,7 +7,7 @@ enable_testing()
 set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be here
 
 # Modify where to find the modules
-set(CMAKE_MODULE_PATH
+list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FortranCInterface
     ${CMAKE_MODULE_PATH}
