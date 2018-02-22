@@ -13,8 +13,7 @@ if (NOT matio_LIBRARIES)
     # Make a modern cmake interface to HDF5
     add_library(HDF5::HDF5 UNKNOWN IMPORTED)
     set_target_properties(HDF5::HDF5 PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${HDF5_INCLUDE_DIRS}")
-    set_property(TARGET HDF5::HDF5 APPEND PROPERTY
+        INTERFACE_INCLUDE_DIRECTORIES "${HDF5_INCLUDE_DIRS}"
         IMPORTED_LOCATION "${HDF5_LIBRARIES}")
 
     # Look for the header file.
@@ -22,15 +21,16 @@ if (NOT matio_LIBRARIES)
     find_path(matio_INCLUDE_DIR
 	    HINTS
         	$ENV{matio_dir}include
-	    NAMES 
+	    NAMES
 	    	matio.h
 	    )
-    
+
     message(STATUS "matio.h ${matio_INCLUDE_DIR}")
     mark_as_advanced(matio_INCLUDE_DIR)
 
     # Look for the library.
 
+    # XXXX This needs to go out !
     set(matio_LIB_SEARCH_PATHS
         C:/conda/Library/
         C:/conda/Library/lib
@@ -40,11 +40,11 @@ if (NOT matio_LIBRARIES)
         $ENV{matio_dir}bin
         )
 
-    find_library(matio_LIBRARY 
-	    HINTS 
+    find_library(matio_LIBRARY
+	    HINTS
 	    	${matio_LIB_SEARCH_PATHS}
-	    NAMES 
-        matio libmatio 
+	    NAMES
+        matio libmatio
 	    )
     message(STATUS "matio_library ${matio_LIBRARY}")
     mark_as_advanced(matio_LIBRARY)
@@ -56,14 +56,10 @@ if (NOT matio_LIBRARIES)
 
     if (matio_FOUND AND NOT TARGET MATIO::MATIO)
         add_library(MATIO::MATIO UNKNOWN IMPORTED)
-        set_property(TARGET MATIO::MATIO PROPERTY
-            IMPORTED_LOCATION ${matio_LIBRARY}
-        )
-        set_property(TARGET MATIO::MATIO PROPERTY
+        set_target_properties(MATIO::MATIO PROPERTIES
             IMPORTED_LINK_LIBRARIES HDF5::HDF5
-        )
-        set_property(TARGET MATIO::MATIO PROPERTY
             INTERFACE_INCLUDE_DIRECTORIES ${matio_INCLUDE_DIR}
+            IMPORTED_LOCATION ${matio_LIBRARY}
         )
     endif()
 
