@@ -1,58 +1,28 @@
-# =====================
-# = OpenMEEGMaths Lib =
-# =====================
+if (MKL_FOUND AND NOT TARGET dummy_target)
+  add_library(dummy_target SHARED utils.cpp)
+  target_link_libraries(dummy_target PUBLIC ${LAPACK_LIBRARIES})
+  target_include_directories(dummy_target PUBLIC ${BLA_INCLUDE_DIR})
+  target_compile_definitions(dummy_target PUBLIC ${BLA_DEFINITIONS})
+  target_include_directories(dummy_target PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+  target_include_directories(dummy_target PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+  target_include_directories(dummy_target PUBLIC ${CMAKE_BINARY_DIR})
 
-# function(create_library libname)
-#     add_library(${libname} SHARED ${ARGN})
-#     target_link_libraries(${libname} ${LAPACK_LIBRARIES} ${matio_LIBRARIES})
-#     if (LAPACK_DEFINITIONS) # mainly for MKL
-#         target_compile_definitions(${libname} PUBLIC ${LAPACK_DEFINITIONS})
-#     endif()
-
-#     set_target_properties(${libname} PROPERTIES
-#                           VERSION 1.1.0
-#                           SOVERSION 1
-#                           #INTERFACE_LINK_LIBRARIES "${NeededLibraries}"
-#                           CLEAN_DIRECT_OUTPUT 1)
-
-#     # message('sik2')
-#     # message(${CMAKE_CURRENT_SOURCE_DIR})
-#     # message(${CMAKE_CURRENT_BINARY_DIR})
-
-#     # message(${libname}
-#     #     EXPORT_FILE_NAME ${libname}_Export.h
-#     #     STATIC_DEFINE ${libname}_BUILT_AS_STATIC)
-#     # message('sik2')
-
-#     # generate_export_header(${libname}
-#     #     EXPORT_FILE_NAME ${libname}_Export.h
-#     #     STATIC_DEFINE ${libname}_BUILT_AS_STATIC)
-
-#     install(TARGETS ${libname}
-#             EXPORT  OpenMEEGTargets
-#             RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-#             ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-#             LIBRARY DESTINATION ${INSTALL_LIB_DIR})
-
-#     # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${libname}_Export.h
-#     #         DESTINATION ${OpenMEEG_HEADER_INSTALLDIR} COMPONENT Development)
-# endfunction()
+  add_library(OpenMEEG::BackEnd ALIAS dummy_target)
+endif()
 
 set(OpenMEEGMaths_SOURCES
     utils.cpp vector.cpp matrix.cpp symmatrix.cpp sparse_matrix.cpp fast_sparse_matrix.cpp
     MathsIO.C MatlabIO.C AsciiIO.C BrainVisaTextureIO.C TrivialBinIO.C)
 
-# set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-# set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 add_library(OpenMEEGMaths SHARED ${OpenMEEGMaths_SOURCES})
-target_link_libraries(OpenMEEGMaths PUBLIC ${LAPACK_LIBRARIES})
+
+# MKL stuff
+target_link_libraries(OpenMEEGMaths PUBLIC OpenMEEG::BackEnd)
+
+# MatIO stuff
 target_link_libraries(OpenMEEGMaths PUBLIC MATIO::MATIO)
-target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_BINARY_DIR})
-target_include_directories(OpenMEEGMaths PRIVATE ${BLA_INCLUDE_DIR})
-target_include_directories(OpenMEEGMaths PRIVATE ${matio_INCLUDE_DIRS})
-target_compile_definitions(OpenMEEGMaths PUBLIC ${BLA_DEFINITIONS})
+
+
 add_library(OpenMEEG::OpenMEEGMaths ALIAS OpenMEEGMaths)
 
 generate_export_header(OpenMEEGMaths
