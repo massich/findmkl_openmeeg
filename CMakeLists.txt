@@ -23,12 +23,19 @@ include(cmake/thirdParties.cmake)
 include(cmake/install.cmake)
 
 
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGConfigure.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/OpenMEEGConfigure.h)
 
 # include_directories(${OpenMEEG_INCLUDE_DIRECTORIES})
 add_subdirectory(OpenMEEGMaths)
+
+include(cmake/Packaging.cmake)
+
+get_target_property(XXX MATIO::MATIO IMPORTED_LOCATION)
+message(${XXX})
+
+get_target_property(XXX HDF5::HDF5 IMPORTED_LOCATION)
+message(${XXX})
 
 # Use a proper config file
 # install(EXPORT OpenMEEGConfig
