@@ -47,6 +47,14 @@ add_subdirectory(OpenMEEGMaths)
 add_subdirectory(OpenMEEG)
 add_subdirectory(apps)
 
+include(cmake/Packaging.cmake)
+
+get_target_property(XXX MATIO::MATIO IMPORTED_LOCATION)
+message(${XXX})
+
+get_target_property(XXX HDF5::HDF5 IMPORTED_LOCATION)
+message(${XXX})
+
 # Use a proper config file
 # install(EXPORT OpenMEEGConfig
 #     FILE OpenMEEGConfig.cmake

@@ -1,4 +1,6 @@
-# Install and Packaging stuff
+# Install stuff
+
+include(GNUInstallDirs)
 
 if (APPLE)
     set(CMAKE_MACOSX_RPATH 1)
@@ -11,5 +13,14 @@ elseif(UNIX)  # means if LINUX
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
-include(Packaging)
-include(GNUInstallDirs)
+# Find absolute path to each external lib to avoid symlinks then package it
+macro(install_system_libs target)
+    get_target_property(THIS_LIBS ${target} IMPORTED_LOCATION)
+    foreach(LIB ${THIS_LIBS})
+        get_filename_component(ABS_LIB ${LIB} REALPATH)
+        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ABS_LIB})
+    endforeach(LIB)
+endmacro()
+
+install_system_libs(HDF5::HDF5)
+install_system_libs(MATIO::MATIO)
