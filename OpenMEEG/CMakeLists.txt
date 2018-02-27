@@ -18,6 +18,7 @@ add_library(OpenMEEG SHARED
     OpenMEEG/src/sensors.cpp
 )
 
+target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_NAMESPACE_STD)
 
 target_include_directories(OpenMEEG
       PUBLIC
