@@ -1,30 +1,30 @@
 # OpenMEEGMath
 add_library(OpenMEEGMaths SHARED
-  src/utils.cpp
-  src/vector.cpp
-  src/matrix.cpp
-  src/symmatrix.cpp
-  src/sparse_matrix.cpp
-  src/fast_sparse_matrix.cpp
-  src/MathsIO.C
-  src/MatlabIO.C
-  src/AsciiIO.C
-  src/BrainVisaTextureIO.C
-  src/TrivialBinIO.C
+  OpenMEEGMaths/src/utils.cpp
+  OpenMEEGMaths/src/vector.cpp
+  OpenMEEGMaths/src/matrix.cpp
+  OpenMEEGMaths/src/symmatrix.cpp
+  OpenMEEGMaths/src/sparse_matrix.cpp
+  OpenMEEGMaths/src/fast_sparse_matrix.cpp
+  OpenMEEGMaths/src/MathsIO.C
+  OpenMEEGMaths/src/MatlabIO.C
+  OpenMEEGMaths/src/AsciiIO.C
+  OpenMEEGMaths/src/BrainVisaTextureIO.C
+  OpenMEEGMaths/src/TrivialBinIO.C
 )
 
 
 
 target_include_directories(OpenMEEGMaths
       PUBLIC
-          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OpenMEEGMaths>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include>
           ${BLA_INCLUDE_DIR} # XXX : this should not be here, transitive properties should work
           MATIO::MATIO
           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # XXX: this is to include the generated file OpenMEEGMaths_Export.h
           $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>         # XXX: this is to include the generated file OpenMEEGConfigure.h
       PRIVATE
-          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/src>
           ${matio_INCLUDE_DIRS} # XXX : this should become transitive prop.
 )
 
@@ -47,11 +47,13 @@ install(TARGETS OpenMEEGMaths EXPORT OpenMEEGConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 
 ############################################################
 
 # This are executables using OpenMEEGMath
-add_subdirectory(tests)
-add_subdirectory(apps)
+# add_subdirectory(tests)
+# add_subdirectory(apps)
+# add_subdirectory(OpenMEEGMath/tests)
+# add_subdirectory(OpenMEEGMath/apps)
