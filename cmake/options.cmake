@@ -1,4 +1,3 @@
-
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 
 if (ENABLE_COVERAGE)

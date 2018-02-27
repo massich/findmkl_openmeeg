@@ -1,6 +1,6 @@
-#########
+###############
 # FindMKL stuff
-#####
+###############
 set(BLA_DEFINITIONS)
 
 if ("$ENV{MKLROOT}" STREQUAL "")
@@ -24,13 +24,7 @@ if (MKL_FOUND)
     set(BLA_INCLUDE_DIR ${MKL_INCLUDE_DIR})
     set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
     set(BLA_DEFINITIONS USE_MKL HAVE_BLAS HAVE_LAPACK)
-    # set(USE_MKL True)
-    # set(HAVE_BLAS True)
-    # set(HAVE_LAPACK True)
 endif()
 
-# include_directories(external/include/)
 find_package(Threads)
 find_package(matio REQUIRED)
-
-# message(STATUS "BLAS Libraries: ${BLAS_LIBRARIES}")
