@@ -13,16 +13,18 @@ add_library(OpenMEEGMaths SHARED
   src/TrivialBinIO.C
 )
 
+
+
 target_include_directories(OpenMEEGMaths
       PUBLIC
-          include
+          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
           ${BLA_INCLUDE_DIR} # XXX : this should not be here, transitive properties should work
           MATIO::MATIO
-          ${CMAKE_CURRENT_SOURCE_DIR}/include
-          ${CMAKE_CURRENT_BINARY_DIR}
-          ${CMAKE_BINARY_DIR}
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # XXX: this is to include the generated file OpenMEEGMaths_Export.h
+          $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>         # XXX: this is to include the generated file OpenMEEGConfigure.h
       PRIVATE
-          src
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
           ${matio_INCLUDE_DIRS} # XXX : this should become transitive prop.
 )
 
@@ -31,7 +33,6 @@ target_link_libraries(OpenMEEGMaths
           ${LAPACK_LIBRARIES}
           MATIO::MATIO
 )
-
 target_compile_definitions(OpenMEEGMaths PUBLIC ${BLA_DEFINITIONS})
 add_library(OpenMEEG::OpenMEEGMaths ALIAS OpenMEEGMaths)
 
