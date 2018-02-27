@@ -50,7 +50,7 @@ target_link_libraries(OpenMEEGMaths PUBLIC MATIO::MATIO)
 target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(OpenMEEGMaths PUBLIC ${CMAKE_BINARY_DIR})
-target_include_directories(OpenMEEGMaths PRIVATE ${BLA_INCLUDE_DIR})
+target_include_directories(OpenMEEGMaths PUBLIC ${BLA_INCLUDE_DIR})  # XXX : this should become PRIVATE !
 target_include_directories(OpenMEEGMaths PRIVATE ${matio_INCLUDE_DIRS})
 target_compile_definitions(OpenMEEGMaths PUBLIC ${BLA_DEFINITIONS})
 add_library(OpenMEEG::OpenMEEGMaths ALIAS OpenMEEGMaths)
