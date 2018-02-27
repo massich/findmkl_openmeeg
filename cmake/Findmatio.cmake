@@ -16,6 +16,12 @@ if (NOT matio_LIBRARIES)
         INTERFACE_INCLUDE_DIRECTORIES "${HDF5_INCLUDE_DIRS}"
         IMPORTED_LOCATION "${HDF5_LIBRARIES}")
 
+    # Find absolute path to each HDF5 lib to avoid symlinks then package it
+    foreach(LIB ${HDF5_LIBRARIES})
+        get_filename_component(ABS_LIB ${LIB} REALPATH)
+        install(PROGRAMS ${ABS_LIB} DESTINATION lib COMPONENT Library)
+    endforeach(LIB)
+
     # Look for the header file.
 
     find_path(matio_INCLUDE_DIR
@@ -61,19 +67,9 @@ if (NOT matio_LIBRARIES)
             INTERFACE_INCLUDE_DIRECTORIES ${matio_INCLUDE_DIR}
             IMPORTED_LOCATION ${matio_LIBRARY}
         )
+
+        # Find absolute path to MATIO lib to avoid symlink then package it
+        get_filename_component(ABS_matio_LIBRARY ${matio_LIBRARY} REALPATH)
+        install(PROGRAMS ${ABS_matio_LIBRARY} DESTINATION lib COMPONENT Library)
     endif()
-
-    # install(TARGETS MATIO::MATIO # EXPORT OpenMEEGConfig
-    #     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    #     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    #     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
-
-    #     set(matio_FOUND TRUE)
-    #     set(matio_LIBRARIES ${matio_LIBRARY} ${HDF5_LIBRARIES})
-    #     set(matio_INCLUDE_DIRS ${matio_INCLUDE_DIR} ${HDF5_INCLUDE_DIR})
-    # else()
-    #     set(matio_FOUND FALSE)
-    #     set(matio_LIBRARIES)
-    #     set(matio_INCLUDE_DIRS)
-    # include(matioVersion)
 endif()
