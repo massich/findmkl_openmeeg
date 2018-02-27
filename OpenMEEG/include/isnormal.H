@@ -40,20 +40,18 @@ knowledge of the CeCILL-B license and that you accept its terms.
 #pragma once
 
 #ifdef HAVE_ISNORMAL_IN_NAMESPACE_STD
-#include <cmath>
+  #include <cmath>
+#elif HAVE_ISNORMAL_IN_MATH_H
+  #include <cmath>
+  namespace std {
+      inline bool isnormal(const double x) { return std::isnormal(x); }
+  }
 #else
-#ifdef HAVE_ISNORMAL_IN_MATH_H
-#include <cmath>
-namespace std {
-    inline bool isnormal(const double x) { return std::isnormal(x); }
-}
-#else
-#include <limits>
-namespace std {
-    inline bool isnormal(double x) {
-        if ( x < 0 ) x = -x;
-        return x >= std::numeric_limits<double>::min() && x <= std::numeric_limits<double>::max();
-    }
-}
-#endif
+  #include <limits>
+  namespace std {
+      inline bool isnormal(double x) {
+          if ( x < 0 ) x = -x;
+          return x >= std::numeric_limits<double>::min() && x <= std::numeric_limits<double>::max();
+      }
+  }
 #endif
