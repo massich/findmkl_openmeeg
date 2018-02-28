@@ -35,7 +35,7 @@ before_install:
       sudo apt-get update
       sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
       sudo apt-get install -y lcov
-      sudo apt-get install -y libmatio2 libmatio-dev
+      # sudo apt-get install -y libmatio2 libmatio-dev
     fi
 
   # Travis machines have 2 cores
@@ -64,8 +64,13 @@ before_install:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         rm -rf /usr/local/include/c++;
         brew install hdf5 libmatio;
+    else
+        git clone https://github.com/astropy/ci-helpers.git;
+        source ci-helpers/travis/setup_conda.sh;
+        conda install -c conda-forge libmatio;
     fi
 
+  - find / | grep libmatio
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
@@ -112,6 +117,7 @@ notifications:
 
 env:
   global:
+    - PYTHON_VERSION=3.6
     - USER="openmeeg"
     - REPO="openmeeg_packages"
     - FILES="README.md"
