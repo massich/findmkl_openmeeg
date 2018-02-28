@@ -105,6 +105,7 @@ script:
   - cmake .. ${CMAKE_OPTIONS}
   - cmake --build .
   - ctest -v .
+  - cpack -G TGZ .
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
