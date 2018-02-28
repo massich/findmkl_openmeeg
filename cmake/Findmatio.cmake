@@ -18,9 +18,11 @@ if (NOT matio_LIBRARIES)
 
     # Look for the header file.
 
+    set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-0/)
     find_path(matio_INCLUDE_DIR
 	    HINTS
         	$ENV{matio_dir}include
+          ${conda_matio}include
 	    NAMES
 	    	matio.h
 	    )
@@ -38,6 +40,9 @@ if (NOT matio_LIBRARIES)
         $ENV{matio_dir}
         $ENV{matio_dir}lib
         $ENV{matio_dir}bin
+        ${conda_matio}
+        ${conda_matio}lib
+        ${conda_matio}bin
         )
 
     find_library(matio_LIBRARY
