@@ -13,10 +13,26 @@ list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
 )
 
+#---------------------------------------------------------------
+# Test and setup the C++ compiler features
+#---------------------------------------------------------------
 
-#########
+include(CheckCXXFeatures)
+CHECK_CXX_STANDARD_LIBRARY()
+
+if (NOT HAVE_ISNORMAL_IN_NAMESPACE_STD)
+    include(CheckSymbolExists)
+    check_symbol_exists(isnormal math.h HAVE_ISNORMAL_IN_MATH_H)
+endif()
+
+if(MSVC)
+    # to allow the use of and, or instead of && ||
+    add_compile_options("/Za")
+endif()
+
+################
 # OpenMEEG stuff
-#####
+################
 include(GenerateExportHeader)
 include(cmake/options.cmake)
 include(cmake/thirdParties.cmake)

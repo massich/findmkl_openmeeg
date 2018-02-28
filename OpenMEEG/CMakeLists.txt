@@ -1,9 +1,3 @@
-if (NOT HAVE_ISNORMAL_IN_NAMESPACE_STD)
-    include(CheckSymbolExists)
-    CHECK_SYMBOL_EXISTS(isnormal math.h HAVE_ISNORMAL_IN_MATH_H)
-endif()
-
-message(DEBUG "current source dir : ${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(OpenMEEG SHARED
     OpenMEEG/src/assembleFerguson.cpp
     OpenMEEG/src/assembleHeadMat.cpp
@@ -19,6 +13,7 @@ add_library(OpenMEEG SHARED
 )
 
 target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_NAMESPACE_STD)
+target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_MATH_H)
 
 target_include_directories(OpenMEEG
       PUBLIC

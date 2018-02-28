@@ -14,8 +14,3 @@ if (ENABLE_COVERAGE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
 endif()
-
-if(MSVC)
-    # to allow the use of and, or instead of && ||
-    add_compile_options("/Za")
-endif()
