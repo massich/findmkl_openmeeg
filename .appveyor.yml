@@ -111,7 +111,7 @@ build_script:
   - cmake --build .
 
 test_script:
-  - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
+  - cp %APPVEYOR_BUILD_FOLDER%\build\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
   - cp %matio_dir%bin\libmatio.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
   - cp %matio_dir%bin\hdf5.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
   - cp %matio_dir%bin\zlib.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
