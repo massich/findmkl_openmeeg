@@ -119,7 +119,7 @@ test_script:
   - appveyor PushArtifact C:\projects\depends.txt
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
   - cmd: ctest -v .
-  - cmd: cpack -G TGZ .
+  - cmd: cpack --config CPackConfig.cmake
 
 deploy: off
 
