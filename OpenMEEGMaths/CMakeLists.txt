@@ -1,16 +1,16 @@
 # OpenMEEGMath
 add_library(OpenMEEGMaths SHARED
-  OpenMEEGMaths/src/utils.cpp
-  OpenMEEGMaths/src/vector.cpp
-  OpenMEEGMaths/src/matrix.cpp
-  OpenMEEGMaths/src/symmatrix.cpp
-  OpenMEEGMaths/src/sparse_matrix.cpp
-  OpenMEEGMaths/src/fast_sparse_matrix.cpp
-  OpenMEEGMaths/src/MathsIO.C
-  OpenMEEGMaths/src/MatlabIO.C
-  OpenMEEGMaths/src/AsciiIO.C
-  OpenMEEGMaths/src/BrainVisaTextureIO.C
-  OpenMEEGMaths/src/TrivialBinIO.C
+  src/utils.cpp
+  src/vector.cpp
+  src/matrix.cpp
+  src/symmatrix.cpp
+  src/sparse_matrix.cpp
+  src/fast_sparse_matrix.cpp
+  src/MathsIO.C
+  src/MatlabIO.C
+  src/AsciiIO.C
+  src/BrainVisaTextureIO.C
+  src/TrivialBinIO.C
 )
 
 
@@ -18,7 +18,7 @@ add_library(OpenMEEGMaths SHARED
 target_include_directories(OpenMEEGMaths
       PUBLIC
           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OpenMEEGMaths>
-          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
           ${BLA_INCLUDE_DIR} # XXX : this should not be here, transitive properties should work
           MATIO::MATIO
           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # XXX: this is to include the generated file OpenMEEGMaths_Export.h
@@ -47,7 +47,7 @@ install(TARGETS OpenMEEGMaths EXPORT OpenMEEGConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEGMaths/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 
 ############################################################
