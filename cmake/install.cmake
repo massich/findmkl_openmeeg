@@ -18,7 +18,7 @@ macro(install_system_libs target)
     get_target_property(THIS_LIBS ${target} IMPORTED_LOCATION)
     foreach(LIB ${THIS_LIBS})
         get_filename_component(ABS_LIB ${LIB} REALPATH)
-        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ABS_LIB})
+        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${LIB} ${ABS_LIB})
     endforeach(LIB)
 endmacro()
 
