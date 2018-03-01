@@ -70,7 +70,7 @@ before_install:
         conda install -c conda-forge libmatio;
     fi
 
-  - find / | grep libmatio
+  # - find / | grep libmatio
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
@@ -84,7 +84,7 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
-  - cmake --build .
+  - make -j $JOBS
   - ctest -v .
   - cpack -G TGZ .
   - |
@@ -114,7 +114,7 @@ after_success:
   - git config user.email "openmeeg@openmeeg.org"
   - git config user.name "openmeeg"
   - cp -R ${PACKAGE_DEPLOY} ./
-  - echo "$(date)\n" >> README.md
+  - echo "- $(date)" >> README.md
   - git add ${FILES}
   - git add OpenMEEG*.tar.gz
   - git commit -m "${MESSAGE}"
