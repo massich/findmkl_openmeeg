@@ -87,10 +87,12 @@ script:
   - cmake --build .
   - ctest -v .
   - cpack -G TGZ .
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       PACKAGE_DEPLOY=$(readlink OpenMEEG*.tar.gz -f)
     fi
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew install coreutils
       PACKAGE_DEPLOY=$(greadlink -f OpenMEEG*.tar.gz)
     fi
