@@ -87,7 +87,13 @@ script:
   - cmake --build .
   - ctest -v .
   - cpack -G TGZ .
-  - PACKAGE_DEPLOY=$(readlink OpenMEEG*.tar.gz -f)
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      PACKAGE_DEPLOY=$(readlink OpenMEEG*.tar.gz -f)
+    fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew install coreutils
+      PACKAGE_DEPLOY=$(greadlink -f OpenMEEG*.tar.gz)
+    fi
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
