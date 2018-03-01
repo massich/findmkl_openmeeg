@@ -8,6 +8,7 @@
 
 if (NOT matio_LIBRARIES)
 
+    set(HDF5_USE_STATIC_LIBRARIES TRUE)
     find_package(HDF5 REQUIRED)
 
     # Make a modern cmake interface to HDF5
@@ -19,6 +20,7 @@ if (NOT matio_LIBRARIES)
     # Look for the header file.
 
     set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-0/)
+    set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-1/)
     find_path(matio_INCLUDE_DIR
 	    HINTS
         	$ENV{matio_dir}include
@@ -49,7 +51,7 @@ if (NOT matio_LIBRARIES)
 	    HINTS
 	    	${matio_LIB_SEARCH_PATHS}
 	    NAMES
-        matio libmatio
+        libmatio.a matio libmatio
 	    )
     message(STATUS "matio_library ${matio_LIBRARY}")
     mark_as_advanced(matio_LIBRARY)
