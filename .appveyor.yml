@@ -20,21 +20,6 @@ environment:
   global:
       PYTHON: "C:\\conda"
   matrix:
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : ON
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : OFF
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
-    - BLAS_VERSION: Intel10_64lp_seq
-      BUILD_STATIC : ON
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
     - BLAS_VERSION: Intel10_64lp_seq
       BUILD_STATIC : ON
       PYTHON_VERSION: "3.6"
