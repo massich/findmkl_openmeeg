@@ -10,7 +10,7 @@ set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be he
 list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FortranCInterface
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/external
+    # ${CMAKE_CURRENT_SOURCE_DIR}/cmake/external
     ${CMAKE_MODULE_PATH}
 )
 

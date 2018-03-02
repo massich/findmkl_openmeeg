@@ -11,6 +11,22 @@ if (NOT matio_LIBRARIES)
     set(HDF5_USE_STATIC_LIBRARIES TRUE)
     find_package(HDF5 REQUIRED)
 
+    if(APPLE)
+        set(HDF5_LIBRARIES_XXX)
+        foreach(LIB ${HDF5_LIBRARIES})
+            if(${LIB} MATCHES "libsz")
+                # get_filename_component(ABS_LIB ${LIB} REALPATH)
+                find_library(LIBSZ
+                    NAMES libsz.a
+                    HINTS /usr/local/opt/szip/lib/
+                    )
+                set(LIB ${LIBSZ})
+            endif()
+            set(HDF5_LIBRARIES_XXX ${HDF5_LIBRARIES_XXX} ${LIB})
+        endforeach(LIB)
+        set(HDF5_LIBRARIES ${HDF5_LIBRARIES_XXX})
+    endif()
+
     # Make a modern cmake interface to HDF5
     add_library(HDF5::HDF5 UNKNOWN IMPORTED)
     set_target_properties(HDF5::HDF5 PROPERTIES
