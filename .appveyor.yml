@@ -108,14 +108,15 @@ before_build:
   - cmake -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
-  - cmake --build .
+  - cmake --build . --config Release
+  - cpack -C Release
 
 test_script:
-  - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\Debug\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - cp %matio_dir%bin\libmatio.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - cp %matio_dir%bin\hdf5.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - cp %matio_dir%bin\zlib.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\
-  - depends.exe /f:1 /c /oc:c:\projects\depends.txt %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Debug\OpenMEEGMathsTest-vector.exe
+  - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\Release\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Release\
+  - cp %matio_dir%bin\libmatio.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Release\
+  - cp %matio_dir%bin\hdf5.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Release\
+  - cp %matio_dir%bin\zlib.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Release\
+  - depends.exe /f:1 /c /oc:c:\projects\depends.txt %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\Release\OpenMEEGMathsTest-vector.exe
   - appveyor PushArtifact C:\projects\depends.txt
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
   - cmd: ctest -v .
