@@ -53,7 +53,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTA
 ############################################################
 
 # This are executables using OpenMEEGMath
-# add_subdirectory(tests)
+add_subdirectory(tests)
 # add_subdirectory(apps)
 # add_subdirectory(OpenMEEGMath/tests)
 # add_subdirectory(OpenMEEGMath/apps)
