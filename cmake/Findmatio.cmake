@@ -62,18 +62,4 @@ if (NOT matio_LIBRARIES)
             IMPORTED_LOCATION ${matio_LIBRARY}
         )
     endif()
-
-    # install(TARGETS MATIO::MATIO # EXPORT OpenMEEGConfig
-    #     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    #     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    #     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
-
-    #     set(matio_FOUND TRUE)
-    #     set(matio_LIBRARIES ${matio_LIBRARY} ${HDF5_LIBRARIES})
-    #     set(matio_INCLUDE_DIRS ${matio_INCLUDE_DIR} ${HDF5_INCLUDE_DIR})
-    # else()
-    #     set(matio_FOUND FALSE)
-    #     set(matio_LIBRARIES)
-    #     set(matio_INCLUDE_DIRS)
-    # include(matioVersion)
 endif()

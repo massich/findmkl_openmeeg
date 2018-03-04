@@ -47,6 +47,8 @@ add_subdirectory(OpenMEEGMaths)
 add_subdirectory(OpenMEEG)
 add_subdirectory(apps)
 
+include(cmake/Packaging.cmake)
+
 # Use a proper config file
 # install(EXPORT OpenMEEGConfig
 #     FILE OpenMEEGConfig.cmake
