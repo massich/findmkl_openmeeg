@@ -3,8 +3,8 @@
 #include <BlasLapackImplementations/FortranCInterface.h>
 
 extern "C" {
-    #include <cblas.h>
-    #include <clapack.h>
+//    #include <cblas.h>
+    #include <atlas/clapack.h>
 }
 
 #define BLAS(x,X) cblas_ ## x
