@@ -1,7 +1,7 @@
 /*
 Project Name : OpenMEEG
 
-© INRIA and ENPC (contributors: Geoffray ADDE, Maureen CLERC, Alexandre
+© INRIA and ENPC (contributors: Geoffray ADDE, Maureen CLERC, Alexandre 
 GRAMFORT, Renaud KERIVEN, Jan KYBIC, Perrine LANDREAU, Théodore PAPADOPOULO,
 Emmanuel OLIVI
 Maureen.Clerc.AT.inria.fr, keriven.AT.certis.enpc.fr,
@@ -38,50 +38,35 @@ knowledge of the CeCILL-B license and that you accept its terms.
 */
 
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
-#include <OpenMEEGMathsConfig.h>
-#include <vector.h>
-#include <matrix.h>
-#include <generic_test.hpp>
+namespace OpenMEEG {
 
-int main () {
+    class cpuChrono {
 
-    using namespace OpenMEEG;
+        clock_t ellapsed;
+        clock_t tstart;
 
-    // section Vector
+    public:
 
-    std::cout << std::endl << "========== vectors ==========" << std::endl;
+        cpuChrono(): ellapsed(0),tstart(0) { }
+        ~cpuChrono(){}
 
-    Vector v(8);
-    v.set(0);
-    v.save("tmp.bin");
+        void start() { tstart = clock();                      }
+        void stop()  { ellapsed += (ellapsed+clock()-tstart); }
+        void zero()  { ellapsed=0;                            }
 
-    for (int i=0;i<8;++i)
-        v(i) = i;
+        clock_t getEllapsedT() const { return ellapsed; }
 
-    v.save("tmp.txt");
-    v.load("tmp.bin");
-    std::cout << "v = " << std::endl << v << std::endl;
-    v.load("tmp.txt");
-    std::cout << "v = " << std::endl << v << std::endl;
+        double getEllapsedS() const {
+            return (double)(ellapsed)/CLOCKS_PER_SEC;
+        }
 
-    std::cout << "MAT :" << std::endl;
-    v.save("tmp_matrix.mat");
-    v.load("tmp_matrix.mat");
-    v.info();
-
-    v(0) = 115;
-    v(7) = 0.16;
-    v(3) = 0.22;
-    v(2) = 2.;
-    Matrix m(v,v.size(),1);
-    m = m* m.transpose();
-    m -= v.outer_product(v);
-    if ( m.frobenius_norm() > eps) {
-        m.info();
-        std::cerr << "Error: Vector outerproduct is WRONG-1" << std::endl;
-        exit(1);
-    }
-
-    return 0;
+        void dispEllapsed() const {
+            std::cout <<  "-------------------------------------------" << std::endl;
+            std::cout <<  "| Elapsed Time: " << getEllapsedS() << " s." << std::endl;
+            std::cout <<  "-------------------------------------------" << std::endl;
+        }
+    };
 }

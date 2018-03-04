@@ -1,7 +1,7 @@
 /*
 Project Name : OpenMEEG
 
-© INRIA and ENPC (contributors: Geoffray ADDE, Maureen CLERC, Alexandre
+© INRIA and ENPC (contributors: Geoffray ADDE, Maureen CLERC, Alexandre 
 GRAMFORT, Renaud KERIVEN, Jan KYBIC, Perrine LANDREAU, Théodore PAPADOPOULO,
 Emmanuel OLIVI
 Maureen.Clerc.AT.inria.fr, keriven.AT.certis.enpc.fr,
@@ -37,48 +37,52 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-B license and that you accept its terms.
 */
 
-#include <iostream>
-
+#include <symmatrix.h>
 #include <vector.h>
+#include <mesh.h>
+#include <sparse_matrix.h>
+#include <fast_sparse_matrix.h>
 
-double eps = 1.e-12;
+using namespace std;
+using namespace OpenMEEG;
 
-template <typename T>
-void genericTest(const std::string& basename, T &M) {
+void getHelp(char** argv);
 
-    using namespace OpenMEEG;
+int main(int argc, char **argv) // TODO a quoi ça sert ?
+{
+    print_version(argv[0]);
 
-    std::cout << " Generic Test " << std::endl;
-    std::cout << "   nlin  = " << static_cast<int>(M.nlin()) << std::endl;
-    std::cout << "   ncol  = " << static_cast<int>(M.ncol()) << std::endl;
-    Vector v(M.ncol());
-    v.set(1);
-    v = M*v;
+    if (argc==1) {
+        cerr << "Not enough arguments \nPlease try \"" << argv[0] << " -h\" or \"" << argv[0] << " --help \" \n" << endl;
+        return 0;
+    }
 
-    std::cout << std::endl << "BASE :" << std::endl;
-    M.info();
+    if ((!strcmp(argv[1],"-h")) | (!strcmp(argv[1],"--help"))) getHelp(argv);
 
-    // Test IO
-    std::cout << std::endl << "BIN :" << std::endl;
-    const std::string binname = basename+".bin";
-    M.save(binname);
-    M.load(binname);
-    M.info();
+    // declaration of argument variables
+    Mesh SourceMesh;
 
-    std::cout << std::endl << "TXT :" << std::endl;
-    const std::string txtname = basename+".txt";
-    M.save(txtname);
-    M.load(txtname);
-    M.info();
+    SourceMesh.load(argv[1]);
 
-    // TODO Here for sparse matrix 
+    SparseMatrix SmoothMatrix = SourceMesh.gradient();
 
-    const std::string matname = basename+".mat";
-    std::cout << "MAT :" << std::endl;
-    M.save(matname);
-    M.load(matname);
-    M.info();
+    // write output variables
+    SmoothMatrix.save(argv[2]);
+    if (argc==4) {
+        const Vector &AiVector = SourceMesh.areas();
+        AiVector.save(argv[3]);
+    }
 
-    std::cout << "   operator * OK" << std::endl;
-    std::cout.flush();
+    return 0;
+}
+
+void getHelp(char** argv)
+{
+    cout << argv[0] <<" [filepaths...]" << endl << endl;
+
+    cout << "   Compute mesh gradient and triangles areas" << endl;
+    cout << "   Filepaths are in order :" << endl;
+    cout << "   SourceMesh, GradientMatrix (bin) [ , AreasVector (bin) ]" << endl << endl;
+
+    exit(0);
 }
