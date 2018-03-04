@@ -15,15 +15,54 @@ matrix:
     #########
     - os: linux
       env:
+        - BACKEND=ATLAS
+        - BUILD_STATIC=OFF
+      addons:
+        sources:
+          - ubuntu-toolchain-r-test
+        apt:
+          packages:
+            - libatlas-base-dev
+    - os: linux
+      env:
+        - BACKEND=Intel10_64lp_seq
+        - BUILD_STATIC=OFF
+    - os: linux
+      env:
         - BACKEND=Intel10_64lp_seq
         - BUILD_STATIC=ON
+    - os: linux
+      env:
+        - BACKEND=Intel10_64lp
+        - BUILD_STATIC=OFF
+    - os: linux
+      env:
+        - BACKEND=Intel10_64lp
+        - BUILD_STATIC=ON
+        - BUILD_PACKAGE=ON
 
     #########
     # OSx Machines
     #########
     - os: osx
       env:
+        - BACKEND=Apple
+        - BUILD_STATIC=OFF
+    - os: osx
+      env:
         - BACKEND=Intel10_64lp_seq
+        - BUILD_STATIC=OFF
+    - os: osx
+      env:
+        - BACKEND=Intel10_64lp_seq
+        - BUILD_STATIC=ON
+    - os: osx
+      env:
+        - BACKEND=Intel10_64lp
+        - BUILD_STATIC=OFF
+    - os: osx
+      env:
+        - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
 
 
@@ -35,7 +74,6 @@ before_install:
       sudo apt-get update
       sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
       sudo apt-get install -y lcov
-      # sudo apt-get install -y libmatio2 libmatio-dev
     fi
 
   # Travis machines have 2 cores
@@ -56,7 +94,10 @@ before_install:
   ############################################################################
   # Install MKL
   ############################################################################
-  - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+  - |
+    if [[ ${BACKEND} = *"Intel"* ]]; then
+      curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+    fi
 
   ############################################################################
   # Install Matio
@@ -65,17 +106,25 @@ before_install:
         rm -rf /usr/local/include/c++;
         brew install hdf5 libmatio;
     else
-        git clone https://github.com/astropy/ci-helpers.git;
-        source ci-helpers/travis/setup_conda.sh;
-        conda install -c conda-forge libmatio;
+        if [[ "${BUILD_PACKAGE}" == "ON" ]]; then
+            git clone https://github.com/astropy/ci-helpers.git;
+            source ci-helpers/travis/setup_conda.sh;
+            conda install -c conda-forge libmatio;
+        else
+            sudo apt-get install -y libmatio2 libmatio-dev
+        fi
     fi
-
-  # - find / | grep libmatio
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
-  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11 -DBLA_VENDOR=$BACKEND -DENABLE_COVERAGE=ON"
+  - |
+    if [[ "${BUILD_PACKAGE}" == "ON" ]]; then
+      export ENABLE_COVERAGE=OFF  # don't use coverage for release package
+    else
+      export ENABLE_COVERAGE=ON
+    fi
+  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11 -DBLA_VENDOR=$BACKEND -DENABLE_COVERAGE=${ENABLE_COVERAGE}"
   - |
     if [[ "${BUILD_STATIC}" == "ON" ]]; then
       export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DBLA_STATIC=ON"
@@ -86,44 +135,51 @@ script:
   - cmake .. ${CMAKE_OPTIONS}
   - make -j $JOBS
   - ctest -v .
-  - cpack -G TGZ .
   - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      PACKAGE_DEPLOY=$(readlink OpenMEEG*.tar.gz -f)
-    fi
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install coreutils
-      PACKAGE_DEPLOY=$(greadlink -f OpenMEEG*.tar.gz)
+    if [[ "${BUILD_PACKAGE}" == "ON" ]]; then
+      cpack -G TGZ .
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        PACKAGE_DEPLOY=$(readlink OpenMEEG*.tar.gz -f)
+      fi
+      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        brew install coreutils
+        PACKAGE_DEPLOY=$(greadlink -f OpenMEEG*.tar.gz)
+      fi
     fi
 
 after_success:
-  - lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
-  - lcov --remove coverage.info '/usr/*' --output-file coverage.info > /dev/null 2>&1 # filter out system
-  - lcov --list coverage.info > /dev/null 2>&1
-  - bash <(curl -s https://codecov.io/bash) > /dev/null 2>&1
-
-  - mkdir -p /tmp/xx/ && cd /tmp/xx/
-  # - MESSAGE=$(git log --format=%B -n 1 $TRAVIS_COMMIT)
-  - MESSAGE="[av skip] Push from findmkl_openmeeg $(date)"
-  - git clone git://${GH_REPO}
-  - cd ${REPO}
-  - git remote
-  # - git config user.email ${EMAIL}
-  # - git config user.name ${USER}
-  - git config user.email "openmeeg@openmeeg.org"
-  - git config user.name "openmeeg"
-  - cp -R ${PACKAGE_DEPLOY} ./
-  - echo "- $(date)" >> README.md
-  - git add ${FILES}
-  - git add OpenMEEG*.tar.gz
-  - git commit -m "${MESSAGE}"
   - |
-    function gitpush() {
-      git pull --no-edit "https://${OPENMEEG_PACKAGING_TOKEN}@${GH_REPO}" master
-      git push "https://${OPENMEEG_PACKAGING_TOKEN}@${GH_REPO}" master
-    }
-  - travis_retry gitpush
+    if [[ "${ENABLE_COVERAGE}" == "ON" ]]; then
+      lcov --directory . --capture --output-file coverage.info > /dev/null 2>&1 # capture coverage info
+      lcov --remove coverage.info '/usr/*' --output-file coverage.info > /dev/null 2>&1 # filter out system
+      lcov --list coverage.info > /dev/null 2>&1
+      bash <(curl -s https://codecov.io/bash) > /dev/null 2>&1
+    fi
+  - |
+    if [[ "${BUILD_PACKAGE}" == "ON" ]]; then
+      mkdir -p /tmp/xx/ && cd /tmp/xx/
+      # MESSAGE=$(git log --format=%B -n 1 $TRAVIS_COMMIT)
+      MESSAGE="[av skip] Push from findmkl_openmeeg $(date)"
+      git clone git://${GH_REPO}
+      cd ${REPO}
+      git remote
+      # git config user.email ${EMAIL}
+      # git config user.name ${USER}
+      git config user.email "openmeeg@openmeeg.org"
+      git config user.name "openmeeg"
+      function gitpush() {
+        git fetch origin
+        git reset --hard origin/master
+        cp -R ${PACKAGE_DEPLOY} ./
+        echo "- $(date)" >> README.md
+        git add ${FILES}
+        git add OpenMEEG*.tar.gz
+        git commit -m "${MESSAGE}"
+        git pull --no-edit "https://${OPENMEEG_PACKAGING_TOKEN}@${GH_REPO}" master
+        git push "https://${OPENMEEG_PACKAGING_TOKEN}@${GH_REPO}" master
+      }
+      travis_retry gitpush
+    fi
 
 notifications:
   email: false

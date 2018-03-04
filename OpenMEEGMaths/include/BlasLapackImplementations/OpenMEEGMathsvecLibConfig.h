@@ -3,10 +3,7 @@
 
 #include <BlasLapackImplementations/FortranCInterface.h>
 
-extern "C" {
-    #include <cblas.h>
-    #include <clapack.h>
-}
+#include <Accelerate/Accelerate.h>
 
 #define BLAS(x,X) cblas_ ## x
 #define LAPACK(x,X) x ## _
