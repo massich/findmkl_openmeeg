@@ -1,5 +1,10 @@
 #   This is the only test that should not use OPENMEEG_TEST
 
+set(OpenMEEG_SOURCE_DIR ${PROJECT_SOURCE_DIR}) # XXXX this has to be done OpenMEEG_BINARY_DIR
+set(OpenMEEG_BINARY_DIR ${CMAKE_BINARY_DIR}) # XXXX this has to be done differently
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/tests/) # XXXX this has to be done differently
+
+
 add_test(CLEAN-TESTS ${CMAKE_COMMAND} -P ${OpenMEEG_SOURCE_DIR}/tests/clean_tests.cmake)
 
 set(ASSEMBLE  om_assemble)
