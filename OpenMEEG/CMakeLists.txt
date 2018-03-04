@@ -1,0 +1,49 @@
+add_library(OpenMEEG SHARED
+    src/assembleFerguson.cpp
+    src/assembleHeadMat.cpp
+    src/assembleSourceMat.cpp
+    src/assembleSensors.cpp
+    src/domain.cpp
+    src/mesh.cpp
+    src/interface.cpp
+    src/danielsson.cpp
+    src/geometry.cpp
+    src/operators.cpp
+    src/sensors.cpp
+)
+
+target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_NAMESPACE_STD)
+target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_MATH_H)
+
+target_include_directories(OpenMEEG
+      PUBLIC
+          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OpenMEEG>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # XXX: this is to include the generated file OpenMEEG_Export.h
+          $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>         # XXX: this is to include the generated file OpenMEEGConfigure.h
+          ${VTK_INCLUDE_DIRS}
+          ${GIFTI_INCLUDE_DIRS}
+      PRIVATE
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/OpenMEEG/src>
+)
+
+target_link_libraries(OpenMEEG
+      PUBLIC # XXX : this should become PRIVATE ! and transitive
+          OpenMEEG::OpenMEEGMaths
+          ${VTK_LIBRARIES}
+          ${GIFTI_LIBRARIES}
+)
+
+
+generate_export_header(OpenMEEG
+    EXPORT_FILE_NAME OpenMEEG_Export.h
+    STATIC_DEFINE OpenMEEG_BUILT_AS_STATIC)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# 'make install' to the correct locations (provided by GNUInstallDirs).
+install(TARGETS OpenMEEG EXPORT OpenMEEGConfig
+    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
