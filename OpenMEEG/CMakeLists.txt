@@ -34,6 +34,7 @@ target_link_libraries(OpenMEEG
           ${GIFTI_LIBRARIES}
 )
 
+add_library(OpenMEEG::OpenMEEG ALIAS OpenMEEG)
 
 generate_export_header(OpenMEEG
     EXPORT_FILE_NAME OpenMEEG_Export.h
