@@ -4,14 +4,22 @@
 #  matio_LIBRARIES    - List of libraries.
 #  matio_FOUND        - True if matio found.
 
+# This module will read the variable
+# MATIO_USE_STATIC_LIBRARIES to determine whether or not to prefer a
+# static link to a dynamic link for MATIO and all of it's dependencies.
+# To use this feature, make sure that the MATIO_USE_STATIC_LIBRARIES
+# variable is set before the call to find_package.
+
 #   We provide a module in case matio has not been found in config mode.
 
 if (NOT matio_LIBRARIES)
 
-    set(HDF5_USE_STATIC_LIBRARIES TRUE)
+    if(MATIO_USE_STATIC_LIBRARIES)
+        set(HDF5_USE_STATIC_LIBRARIES TRUE)
+    endif()
     find_package(HDF5 REQUIRED)
 
-    if(APPLE)
+    if(MATIO_USE_STATIC_LIBRARIES AND APPLE)
         set(HDF5_LIBRARIES_XXX)
         foreach(LIB ${HDF5_LIBRARIES})
             if(${LIB} MATCHES "libsz")
@@ -34,8 +42,6 @@ if (NOT matio_LIBRARIES)
         IMPORTED_LOCATION "${HDF5_LIBRARIES}")
 
     # Look for the header file.
-
-    set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-0/)
     set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-1/)
     find_path(matio_INCLUDE_DIR
 	    HINTS
@@ -63,12 +69,17 @@ if (NOT matio_LIBRARIES)
         ${conda_matio}bin
         )
 
+    set(MATIO_NAMES matio libmatio)
+    if(MATIO_USE_STATIC_LIBRARIES)
+        set(MATIO_NAMES  libmatio.a ${MATIO_NAMES})
+    endif()
+
     find_library(matio_LIBRARY
-	    HINTS
-	    	${matio_LIB_SEARCH_PATHS}
-	    NAMES
-        libmatio.a matio libmatio
-	    )
+        HINTS
+            ${matio_LIB_SEARCH_PATHS}
+        NAMES
+            ${MATIO_NAMES}
+        )
     message(STATUS "matio_library ${matio_LIBRARY}")
     mark_as_advanced(matio_LIBRARY)
 

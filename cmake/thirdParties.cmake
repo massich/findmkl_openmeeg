@@ -40,4 +40,8 @@ else()
 endif()
 
 find_package(Threads)
+
+if(BLA_STATIC)
+    set(MATIO_USE_STATIC_LIBRARIES TRUE)
+endif()
 find_package(matio REQUIRED)

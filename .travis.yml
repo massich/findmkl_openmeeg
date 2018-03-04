@@ -29,10 +29,6 @@ matrix:
         - BUILD_STATIC=OFF
     - os: linux
       env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=ON
-    - os: linux
-      env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=OFF
     - os: linux
@@ -64,6 +60,7 @@ matrix:
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
+        - BUILD_PACKAGE=ON
 
 
 before_install:
