@@ -86,3 +86,6 @@ if (BUILD_TESTING)
     TESTHEAD(MN2)
     TESTHEAD(MN3)
 endif()
+
+
+add_subdirectory(tools)
