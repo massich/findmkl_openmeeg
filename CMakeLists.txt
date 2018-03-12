@@ -33,3 +33,4 @@ add_subdirectory(apps)
 # OpenMEEG Export
 ################
 include(cmake/install.cmake)
+include(cmake/Packaging.cmake)
