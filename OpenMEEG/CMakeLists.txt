@@ -15,6 +15,23 @@ add_library(OpenMEEG SHARED
 target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_NAMESPACE_STD)
 target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_MATH_H)
 
+# OpenMP
+find_package(OpenMP)
+if(USE_OPENMP)
+    if (OPENMP_FOUND)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+      target_compile_definitions(OpenMEEG PUBLIC USE_OMP)
+    else()
+      message("OpenMP library not found. Use a compiler with OpenMP support for optimized running time." )
+    endif()
+endif()
+
+# Progress bar
+option(USE_PROGRESSBAR "Use progressar to display computation progress" ON)
+if(USE_PROGRESSBAR)
+    target_compile_definitions(OpenMEEG PUBLIC USE_PROGRESSBAR)
+endif(USE_PROGRESSBAR)
+
 target_include_directories(OpenMEEG
       PUBLIC
           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OpenMEEG>

@@ -49,6 +49,11 @@ matrix:
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
+    - os: osx
+      env:
+        - BACKEND=Intel10_64lp
+        - BUILD_STATIC=ON
+        - USE_GCC=ON
 
 
 before_install:
@@ -98,6 +103,10 @@ script:
   - |
     if [[ "${BUILD_STATIC}" == "ON" ]]; then
       export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DBLA_STATIC=ON"
+    fi
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" && "${USE_GCC}" == "ON" ]]; then
+      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-7"
     fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then echo $LD_LIBRARY_PATH; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
