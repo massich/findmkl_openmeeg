@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.2)
-project (OpenMEEG_lib VERSION 2.4.0 LANGUAGES C CXX)
+project (OpenMEEG VERSION 2.4.0 LANGUAGES C CXX)
 
 set(OpenMEEG_HEADER_INSTALLDIR include) # XXX I don't know why this should be here
 
