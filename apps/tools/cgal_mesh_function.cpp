@@ -37,48 +37,31 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-B license and that you accept its terms.
 */
 
-#include <iostream>
+#include <mesh.h>
+#include "options.h"
+#include <cgal_lib.h>
 
-#include <vector.h>
+using namespace OpenMEEG;
 
-double eps = 1.e-12;
+int main(int argc, char **argv) {
+    command_usage("Create a BEM mesh from either an implicit function: sphere, hemisphere, ...:");
+    const double sphere_radius     = command_option("-r", 0., "radius of the sphere");
+    const double hemisphere_radius = command_option("-hr", 0., "radius of the hemisphere");
+    const double radius_bound      = command_option("-fs",1e-1,"facet radius bound of elements");
+    const double distance_bound    = command_option("-fd",1e-1,"facet distance bound to the input surface");
+    // const unsigned init_points  = command_option("-ip", 10, "initial number of points (for the hemisphere)");
+    const char * output_filename   = command_option("-o",(const char *) NULL,"Output Mesh");
 
-template <typename T>
-void genericTest(const std::string& basename, T &M) {
+    if ( command_option("-h",(const char *)0,0) ) {
+        return 0;
+    }
+    if ( output_filename == NULL ) {
+        std::cerr << "Set an output filename" << std::endl;
+        return 0;
+    }
 
-    using namespace OpenMEEG;
-
-    std::cout << " Generic Test " << std::endl;
-    std::cout << "   nlin  = " << static_cast<int>(M.nlin()) << std::endl;
-    std::cout << "   ncol  = " << static_cast<int>(M.ncol()) << std::endl;
-    Vector v(M.ncol());
-    v.set(1);
-    v = M*v;
-
-    std::cout << std::endl << "BASE :" << std::endl;
-    M.info();
-
-    // Test IO
-    std::cout << std::endl << "BIN :" << std::endl;
-    const std::string binname = basename+".bin";
-    M.save(binname);
-    M.load(binname);
-    M.info();
-
-    std::cout << std::endl << "TXT :" << std::endl;
-    const std::string txtname = basename+".txt";
-    M.save(txtname);
-    M.load(txtname);
-    M.info();
-
-    // TODO Here for sparse matrix 
-
-    const std::string matname = basename+".mat";
-    std::cout << "MAT :" << std::endl;
-    M.save(matname);
-    M.load(matname);
-    M.info();
-
-    std::cout << "   operator * OK" << std::endl;
-    std::cout.flush();
+    Mesh m_out = cgal_mesh_function(sphere_radius, hemisphere_radius, radius_bound, distance_bound);
+    m_out.save(output_filename);
+    m_out.info();
+    return 0;
 }
