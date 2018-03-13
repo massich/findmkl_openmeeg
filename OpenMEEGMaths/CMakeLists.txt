@@ -29,8 +29,9 @@ target_include_directories(OpenMEEGMaths
 )
 
 target_link_libraries(OpenMEEGMaths
-      PUBLIC # XXX : this should become PRIVATE !
+      PUBLIC # XXX : this should become PRIVATE ! and hdf5 should come from matio
           ${LAPACK_LIBRARIES}
+          ${HDF5_LIBRARIES}
           MATIO::MATIO
 )
 target_compile_definitions(OpenMEEGMaths PUBLIC ${BLA_DEFINITIONS})
