@@ -42,7 +42,7 @@ if (NOT matio_LIBRARIES)
         INTERFACE_LINK_LIBRARIES "${HDF5_LIBRARIES}")
 
     # Look for the header file.
-    set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.11-1/)
+    set(conda_matio /home/travis/miniconda/pkgs/libmatio-1.5.12-0/)
     find_path(matio_INCLUDE_DIR
 	    HINTS
         	$ENV{matio_dir}include
