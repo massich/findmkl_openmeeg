@@ -19,6 +19,7 @@ matrix:
     - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
+        - USE_VTK=ON
       addons:
         sources:
           - ubuntu-toolchain-r-test
@@ -36,6 +37,7 @@ matrix:
       env:
         - BACKEND=Intel10_64lp  # XXX : move to openblas
         - USE_GCC=ON
+        - USE_VTK=ON
 
     - os: osx  # Static analysis using clang-analyzer
       env:
@@ -80,14 +82,14 @@ before_install:
   ############################################################################
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         rm -rf /usr/local/include/c++;
-        brew install hdf5 libmatio;
+        brew install hdf5 libmatio vtk;
     else
         if [[ "${BUILD_PACKAGE}" == "ON" ]]; then
             git clone https://github.com/astropy/ci-helpers.git;
             source ci-helpers/travis/setup_conda.sh;
             conda install -c conda-forge libmatio;
         else
-            sudo apt-get install -y libmatio2 libmatio-dev;
+            sudo apt-get install -y libmatio2 libmatio-dev libvtk5-dev;
         fi
     fi
 
@@ -123,6 +125,10 @@ script:
   - |
     if [[ "${CONFIGURATION}" == "Release" ]] && [[ "${ANALYSE}" != "ON" ]]; then
       export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=RELEASE"
+    fi
+  - |
+    if [[ "${USE_VTK}" == "ON" ]]; then
+      export CMAKE_OPTIONS=" -DUSE_VTK=ON"
     fi
   - |
     if [[ "${TRAVIS_OS_NAME}" == "osx" && "${USE_GCC}" == "ON" ]]; then
