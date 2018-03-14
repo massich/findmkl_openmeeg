@@ -5,8 +5,8 @@ platform:
   - x64
 
 configuration:
-  - Debug
-  # - Release
+  # - Debug
+  - Release
 
 image:
   - Visual Studio 2015
@@ -20,21 +20,6 @@ environment:
   global:
       PYTHON: "C:\\conda"
   matrix:
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : ON
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
-    - BLAS_VERSION: Intel10_64lp
-      BUILD_STATIC : OFF
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
-    - BLAS_VERSION: Intel10_64lp_seq
-      BUILD_STATIC : ON
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-
     - BLAS_VERSION: Intel10_64lp_seq
       BUILD_STATIC : ON
       PYTHON_VERSION: "3.6"
@@ -105,10 +90,11 @@ before_build:
       cd build
   - ps: $env:matio_dir='C:\conda\Library\'
   - ps: $env:CMAKE_PREFIX_PATH='C:\conda\Library\cmake'
-  - cmake -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G "Visual Studio 14 2015 Win64" ..
+  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
-  - cmake --build .
+  - cmake --build . --config %CONFIGURATION%
+  - cpack -C Release
 
 test_script:
   - cp %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\%CONFIGURATION%\OpenMEEGMaths.dll %APPVEYOR_BUILD_FOLDER%\build\OpenMEEGMaths\tests\%CONFIGURATION%\
@@ -134,6 +120,7 @@ test_script:
   - appveyor PushArtifact C:\projects\depends.txt
   - call "C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\mkl\bin\mklvars.bat" intel64
   - cmd: ctest -v .
+  - appveyor PushArtifact %APPVEYOR_BUILD_FOLDER%\build\OpenMEEG-2.4.0-Win64.tar.gz
 
 deploy: off
 

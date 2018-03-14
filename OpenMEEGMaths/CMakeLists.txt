@@ -14,7 +14,6 @@ add_library(OpenMEEGMaths SHARED
 )
 
 
-
 target_include_directories(OpenMEEGMaths
       PUBLIC
           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OpenMEEGMaths>

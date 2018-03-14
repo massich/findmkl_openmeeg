@@ -1,3 +1,7 @@
+set(BUILD_TESTING True)
+enable_testing()
+
+
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 
 if (ENABLE_COVERAGE)
@@ -14,3 +18,6 @@ if (ENABLE_COVERAGE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_FLAGS}")
 endif()
+
+# Installation options
+include(GNUInstallDirs)
