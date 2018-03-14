@@ -15,7 +15,6 @@ if (NOT matio_LIBRARIES)
     set_target_properties(HDF5::HDF5 PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${HDF5_INCLUDE_DIRS}"
         INTERFACE_LINK_LIBRARIES "${HDF5_LIBRARIES}")
-        # IMPORTED_LOCATION "${HDF5_LIBRARIES}")
 
     # Look for the header file.
 
