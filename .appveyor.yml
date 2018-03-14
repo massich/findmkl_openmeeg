@@ -6,11 +6,11 @@ platform:
 
 configuration:
   - Debug
-  # - Release
+  - Release
 
 image:
   - Visual Studio 2015
-  # - Visual Studio 2017
+  - Visual Studio 2017
 
 cache:
   - C:\cmake-3.10.1-win64-x64
