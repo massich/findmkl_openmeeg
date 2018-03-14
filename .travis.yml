@@ -10,25 +10,13 @@ cache:
 
 matrix:
   include:
-    #########
-    # Linux Machines
-    #########
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=OFF
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-
-    - os: linux
+    - os: linux  # shipping linux
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
         - BUILD_PACKAGE=ON
 
-    - os: linux
+    - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
         - BUILD_STATIC=OFF
@@ -39,31 +27,17 @@ matrix:
           packages:
             - libatlas-base-dev
 
-    #########
-    # OSx Machines
-    #########
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=OFF
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-    - os: osx
+    - os: osx  # shipping mac
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
         - BUILD_PACKAGE=ON
-    - os: osx
+
+    - os: osx  # shipping brew
       env:
         - BACKEND=Apple
         - BUILD_STATIC=OFF
         - USE_GCC=ON
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=ON
 
 before_install:
   - |
