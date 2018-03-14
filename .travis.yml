@@ -101,7 +101,7 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
-  - cmake --build .
+  - cmake --build . --config ${CONFIGURATION}
   - ctest -v .
 
 after_success:
@@ -143,6 +143,7 @@ notifications:
 
 env:
   global:
+    - CONFIGURATION=Release
     - PYTHON_VERSION=3.6
     - USER="openmeeg"
     - REPO="openmeeg_packages"
