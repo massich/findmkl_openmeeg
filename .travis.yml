@@ -19,7 +19,6 @@ matrix:
     - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
-        - BUILD_STATIC=OFF
       addons:
         sources:
           - ubuntu-toolchain-r-test
@@ -35,9 +34,12 @@ matrix:
 
     - os: osx  # shipping brew
       env:
-        - BACKEND=Apple
-        - BUILD_STATIC=OFF
+        - BACKEND=Intel10_64lp  # XXX : move to openblas
         - USE_GCC=ON
+
+    - os: osx  # Testing Apple backend
+      env:
+        - BACKEND=Apple
 
 before_install:
   - |
@@ -65,9 +67,12 @@ before_install:
   - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_cmake.sh > x.sh && source ./x.sh
 
   ############################################################################
-  # Install MKL
+  # Install MKL (if necessary)
   ############################################################################
-  - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+  - |
+    if [[ "${BACKEND}" == *"Intel"* ]]; then
+      curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+    fi
 
   ############################################################################
   # Install Matio
