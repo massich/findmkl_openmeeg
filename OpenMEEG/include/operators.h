@@ -93,13 +93,8 @@ namespace OpenMEEG {
     }
 
     inline double _operatorS(const Triangle& T1,const Triangle& T2,const unsigned gauss_order) {
-        STATIC_OMP Triangle *oldT = 0;
         STATIC_OMP analyticS analyS;
 
-        if ( oldT != &T1 ) { // a few computations are needed only when changing triangle T1
-            oldT = (Triangle*)&T1;
-            analyS.init(T1);
-        }
     #ifdef ADAPT_LHS
         AdaptiveIntegrator<double, analyticS> gauss(0.005);
         gauss.setOrder(gauss_order);
