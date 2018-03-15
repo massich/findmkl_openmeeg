@@ -10,28 +10,15 @@ cache:
 
 matrix:
   include:
-    #########
-    # Linux Machines
-    #########
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=OFF
-    - os: linux
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-
-    - os: linux
+    - os: linux  # shipping linux
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
         - BUILD_PACKAGE=ON
 
-    - os: linux
+    - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
-        - BUILD_STATIC=OFF
       addons:
         sources:
           - ubuntu-toolchain-r-test
@@ -39,27 +26,20 @@ matrix:
           packages:
             - libatlas-base-dev
 
-    #########
-    # OSx Machines
-    #########
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp_seq
-        - BUILD_STATIC=OFF
-    - os: osx
-      env:
-        - BACKEND=Intel10_64lp
-        - BUILD_STATIC=OFF
-    - os: osx
+    - os: osx  # shipping mac
       env:
         - BACKEND=Intel10_64lp
         - BUILD_STATIC=ON
         - BUILD_PACKAGE=ON
-    - os: osx
+
+    - os: osx  # shipping brew
+      env:
+        - BACKEND=Intel10_64lp  # XXX : move to openblas
+        - USE_GCC=ON
+
+    - os: osx  # Testing Apple backend
       env:
         - BACKEND=Apple
-        - BUILD_STATIC=OFF
-        
 
 before_install:
   - |
@@ -87,9 +67,12 @@ before_install:
   - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_cmake.sh > x.sh && source ./x.sh
 
   ############################################################################
-  # Install MKL
+  # Install MKL (if necessary)
   ############################################################################
-  - curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+  - |
+    if [[ "${BACKEND}" == *"Intel"* ]]; then
+      curl -fsSkL https://raw.githubusercontent.com/openmeeg/ci-utils/master/travis/install_mkl.sh > install_mkl.sh && source ./install_mkl.sh
+    fi
 
   ############################################################################
   # Install Matio
@@ -115,11 +98,19 @@ script:
     if [[ "${BUILD_STATIC}" == "ON" ]]; then
       export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DBLA_STATIC=ON"
     fi
+  - |
+    if [[ "${CONFIGURATION}" == "Release" ]]; then
+      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=RELEASE"
+    fi
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" && "${USE_GCC}" == "ON" ]]; then
+      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-7"
+    fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then echo $LD_LIBRARY_PATH; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
-  - cmake --build .
+  - cmake --build . -- -j ${JOBS}
   - ctest -v .
 
 after_success:
@@ -161,6 +152,7 @@ notifications:
 
 env:
   global:
+    - CONFIGURATION=Release
     - PYTHON_VERSION=3.6
     - USER="openmeeg"
     - REPO="openmeeg_packages"
