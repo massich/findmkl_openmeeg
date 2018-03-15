@@ -36,7 +36,7 @@ matrix:
     - os: osx  # shipping brew
       env:
         - BACKEND=Intel10_64lp  # XXX : move to openblas
-        - USE_GCC=ON
+        # - USE_GCC=ON  # XXX : vtk does not work with GCC
         - USE_VTK=ON
 
     - os: osx  # Static analysis using clang-analyzer
