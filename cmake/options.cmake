@@ -1,6 +1,8 @@
 set(BUILD_TESTING True)
 enable_testing()
 
+option(USE_VTK "Use VTK" OFF)
+option(USE_CGAL "Use CGAL" OFF)
 
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 

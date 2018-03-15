@@ -15,6 +15,10 @@ add_library(OpenMEEG SHARED
 target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_NAMESPACE_STD)
 target_compile_definitions(OpenMEEG PUBLIC HAVE_ISNORMAL_IN_MATH_H)
 
+if(VTK_FOUND)
+    target_compile_definitions(OpenMEEG PUBLIC USE_VTK)
+endif()
+
 # OpenMP
 find_package(OpenMP)
 if (OPENMP_FOUND)

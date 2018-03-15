@@ -56,9 +56,14 @@ if (USE_CGAL)
 
     # compile the OpenMEEGCgal library
     add_library(OpenMEEGCgal ${OM_CGAL_SOURCES})
-    target_link_libraries(OpenMEEGCgal OpenMEEG ${CGAL_LIBRARIES} ${VTK_LIBRARIES})
-    target_include_directories(OpenMEEGCgal PUBLIC ${CGAL_INCLUDE_DIRS})
-    target_compile_options(OpenMEEGCgal PUBLIC ${CGAL_CXX_FLAGS})
+    target_link_libraries(OpenMEEGCgal
+        PUBLIC
+            OpenMEEG
+            ${CGAL_LIBRARIES}
+            ${VTK_LIBRARIES}
+    )
+    # target_include_directories(OpenMEEGCgal PUBLIC ${CGAL_INCLUDE_DIRS})
+    # target_compile_options(OpenMEEGCgal PUBLIC ${CGAL_CXX_FLAGS})
     install(TARGETS OpenMEEGCgal DESTINATION lib)
 
     # compile each target
@@ -66,9 +71,9 @@ if (USE_CGAL)
     foreach(target ${OM_CGAL_TARGETS})
         add_executable(om_${target} ${target}.cpp)
         list(APPEND OM_CGAL_EXEC om_${target})
-        target_link_libraries(om_${target} OpenMEEG OpenMEEGCgal ${CGAL_LIBRARIES} ${VTK_LIBRARIES})
-        target_include_directories(om_${target} PUBLIC ${CGAL_INCLUDE_DIRS})
-        target_compile_options(om_${target} PUBLIC ${CGAL_CXX_FLAGS})
+        target_link_libraries(om_${target} OpenMEEGCgal)
+        # target_include_directories(om_${target} PUBLIC ${CGAL_INCLUDE_DIRS})
+        # target_compile_options(om_${target} PUBLIC ${CGAL_CXX_FLAGS})
     endforeach()
     install(TARGETS ${OM_CGAL_EXEC} DESTINATION bin)
 
