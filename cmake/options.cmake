@@ -1,6 +1,7 @@
 set(BUILD_TESTING True)
 enable_testing()
 
+option(USE_VTK "Use VTK" OFF)
 
 option(ENABLE_COVERAGE "Enable coverage" OFF)
 
