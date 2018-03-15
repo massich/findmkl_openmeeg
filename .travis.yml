@@ -19,6 +19,7 @@ matrix:
     - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
+        - ANALYSE=ON
       addons:
         sources:
           - ubuntu-toolchain-r-test
@@ -40,7 +41,6 @@ matrix:
     - os: osx  # Static analysis using clang-analyzer
       env:
         - BACKEND=Apple
-        - ANALYSE=ON
 
 before_install:
   - |
