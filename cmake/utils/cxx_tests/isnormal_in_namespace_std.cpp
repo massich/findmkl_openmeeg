@@ -19,6 +19,8 @@ namespace S {
 
 int main() {
     double d = 3.0;
-    const bool res = S::isnormal(d);
+    #ifndef __clang_analyzer__
+      const bool res = S::isnormal(d);
+    #endif
     return 0;
 }

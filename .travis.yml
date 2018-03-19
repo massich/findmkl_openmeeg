@@ -19,6 +19,7 @@ matrix:
     - os: linux  # shipping apt-get
       env:
         - BACKEND=ATLAS
+        - ANALYSE=ON
       addons:
         sources:
           - ubuntu-toolchain-r-test
